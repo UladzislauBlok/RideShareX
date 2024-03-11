@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: configuration-server
+  cloud:
+    config:
+      server:
+        git:
+          default-label: master
+          uri: https://github.com/UladzislauBlok/RideShareX_Config.git
+          username: UladzislauBlok
+          password:
+
+server:
+  port: 8080

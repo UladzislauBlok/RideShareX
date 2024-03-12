@@ -1,4 +1,5 @@
 target/
+.env
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -16,7 +17,6 @@ target/
 .settings
 .springBeans
 .sts4-cache
-envs/
 
 ### NetBeans ###
 /nbproject/private/

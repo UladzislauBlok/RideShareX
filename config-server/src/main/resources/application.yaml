@@ -6,9 +6,9 @@ spring:
       server:
         git:
           default-label: master
-          uri: https://github.com/UladzislauBlok/RideShareX_Config.git
-          username: UladzislauBlok
-          password:
+          uri: https://github.com/${GIT_USER}/${CONFIG_REPOSITORY}
+          username: ${GIT_USER}
+          password: ${GIT_PASSWORD}
 
 server:
   port: 8080

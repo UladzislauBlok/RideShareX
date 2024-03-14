@@ -9,6 +9,7 @@
 
   <modules>
     <module>config-server</module>
+      <module>netflix-eureka</module>
   </modules>
 
   <properties>

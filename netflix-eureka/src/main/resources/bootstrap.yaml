@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: eureka-server
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      uri: ${CONFIGURATION_SERVER_URI}
+      name: eureka-server

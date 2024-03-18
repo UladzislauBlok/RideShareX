@@ -10,6 +10,7 @@
   <modules>
     <module>config-server</module>
       <module>netflix-eureka</module>
+    <module>ride</module>
   </modules>
 
   <properties>

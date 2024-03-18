@@ -25,12 +25,12 @@ services:
     image: netflix-eureka:1.0.0
     container_name: netflix-eureka
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
       interval: 10s
       timeout: 8s
       retries: 5
     ports:
-      - "8887:8080"
+      - "8761:8761"
     depends_on:
       configuration-server:
         condition: service_healthy

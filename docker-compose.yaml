@@ -1,5 +1,21 @@
 services:
 
+  postgres-user:
+    image: postgres:latest
+    container_name: postgres-user
+    environment:
+      POSTGRES_USER: ${DB_USERNAME_USER_MICROSERVICE}
+      POSTGRES_PASSWORD: ${DB_USERNAME_USER_MICROSERVICE}
+      POSTGRES_DB: user_db
+      PGDATA: /data/postgres
+    ports:
+      - '5431:5432'
+    volumes:
+      - C:\postgres-container-data:/data/postgres
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
   configuration-server:
     build: config-server
     image: config-server:1.0.0

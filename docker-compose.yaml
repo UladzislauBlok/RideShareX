@@ -3,9 +3,14 @@ services:
   postgres-user:
     image: postgres:latest
     container_name: postgres-user
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_USER_MICROSERVICE} -d user_db" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
     environment:
       POSTGRES_USER: ${DB_USERNAME_USER_MICROSERVICE}
-      POSTGRES_PASSWORD: ${DB_USERNAME_USER_MICROSERVICE}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_USER_MICROSERVICE}
       POSTGRES_DB: user_db
       PGDATA: /data/postgres
     ports:
@@ -73,9 +78,14 @@ services:
         condition: service_healthy
       netflix-eureka:
         condition: service_healthy
+      postgres-user:
+        condition: service_healthy
     environment:
       CONFIGURATION_SERVER_URI: http://configuration-server:8080/
       EUREKA_URI: http://netflix-eureka:8761/eureka
+      DB_USERNAME_USER_MICROSERVICE: ${DB_USERNAME_USER_MICROSERVICE}
+      DB_PASSWORD_USER_MICROSERVICE: ${DB_PASSWORD_USER_MICROSERVICE}
+      SQL_URI: jdbc:postgresql://postgres-user:5432/user_db
     restart: on-failure:5
     networks:
       - ridesharex-net

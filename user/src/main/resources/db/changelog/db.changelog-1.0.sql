@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS documents (
 );
 
 --changeset ublok:3
-CREATE TABLE cars (
+CREATE TABLE IF NOT EXISTS cars (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     brand VARCHAR(32) NOT NULL,

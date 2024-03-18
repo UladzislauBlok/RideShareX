@@ -2,9 +2,9 @@ services:
 
   postgres-ride:
     image: postgres:latest
-    container_name: postgres-user
+    container_name: postgres-ride
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_USER_MICROSERVICE} -d ride_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_RIDE_MICROSERVICE} -d ride_db" ]
       interval: 10s
       timeout: 8s
       retries: 5

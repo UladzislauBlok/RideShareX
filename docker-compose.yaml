@@ -16,7 +16,7 @@ services:
     ports:
       - '5431:5432'
     volumes:
-      - C:\postgres-container-data:/data/postgres
+      - C:\postgres-container-data\user:/data/postgres
     networks:
       - ridesharex-net
     restart: unless-stopped

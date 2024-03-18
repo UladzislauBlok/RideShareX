@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users
 --changeset ublok:2
 CREATE TABLE IF NOT EXISTS documents (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id uuid REFERENCES users(id),
+    user_id uuid REFERENCES users(id) NOT NULL ,
     type VARCHAR(32) NOT NULL,
     number VARCHAR(64) NOT NULL UNIQUE ,
     creation_date DATE NOT NULL
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS documents (
 --changeset ublok:3
 CREATE TABLE IF NOT EXISTS cars (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id uuid REFERENCES users(id),
+    user_id uuid REFERENCES users(id) NOT NULL ,
     brand VARCHAR(32) NOT NULL,
     model VARCHAR(32) NOT NULL,
     year INTEGER,

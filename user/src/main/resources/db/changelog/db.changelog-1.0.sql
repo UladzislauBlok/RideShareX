@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS cars (
 --changeset ublok:4
 CREATE TABLE IF NOT EXISTS ratings (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    rated_user_id uuid REFERENCES users(id),
-    rating_user_id uuid REFERENCES users(id),
+    rated_user_id uuid REFERENCES users(id) NOT NULL ,
+    rating_user_id uuid REFERENCES users(id) NOT NULL ,
     rating_value INT NOT NULL,
     rated_at TIMESTAMP NOT NULL
 );

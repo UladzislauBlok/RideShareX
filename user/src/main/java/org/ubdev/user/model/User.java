@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.ubdev.car.model.Car;
 import org.ubdev.document.model.Document;
 
 import java.time.LocalDate;
@@ -56,4 +57,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Document> documents;
+
+    @OneToMany(mappedBy = "user")
+    private List<Car> cars;
 }

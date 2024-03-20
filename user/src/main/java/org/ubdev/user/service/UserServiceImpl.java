@@ -45,8 +45,10 @@ public class UserServiceImpl implements UserService {
     public UserDto create(CreateUserDto dto) {
         if (userRepository.existsByEmail(dto.email()))
             throw new DuplicateEmailException();
+
+        User newUser = userMapper.createNewUserWithoutId(dto);
         // TODO image save logic
-        User newUser = userRepository.save(userMapper.createNewUserWithoutId(dto));
+        newUser = userRepository.save(newUser);
         return userMapper.userToUserDto(newUser);
     }
 
@@ -59,6 +61,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserUpdateDto dto) {
-        return null;
+        User user = userRepository.findById(dto.id())
+                .orElseThrow(NoSuchElementException::new);
+        userMapper.updateUserFromUserDto(dto, user);
+        // TODO update image logic
+        userRepository.save(user);
+        return userMapper.userToUserDto(user);
     }
 }

@@ -1,11 +1,11 @@
-package org.ubdev.user.mapper;
+package org.ubdev.user.constraint;
 
 import org.ubdev.user.model.Preference;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class UserMapperTestConstants {
+public class UserTestConstants {
     public static final UUID id = UUID.fromString("74b7d2b2-004c-45df-b0bd-38d2e9f37d72");
     public static final String name = "TestName";
     public static final String surname = "TestSurname";

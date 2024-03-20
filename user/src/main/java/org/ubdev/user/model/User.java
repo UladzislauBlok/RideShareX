@@ -39,7 +39,8 @@ public class User {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
-    private String photo;
+    @Column(name = "photo")
+    private String photoUrl;
 
     @Column(name = "phone_number")
     private String phoneNumber;

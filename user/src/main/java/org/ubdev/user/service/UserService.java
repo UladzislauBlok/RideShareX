@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface UserService {
     UserDto getById(UUID id);
     UserDto getByEmail(String email);
-    Page<UserDto> getAll();
+    Page<UserDto> getAll(int pageNum, int pageSize);
     UserDto create(CreateUserDto dto);
     void deleteById(UUID id);
     UserDto update(UserUpdateDto dto);

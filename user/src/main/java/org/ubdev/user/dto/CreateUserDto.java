@@ -22,7 +22,7 @@ public record CreateUserDto(
 
         @JsonProperty("registration_date")
         LocalDate registrationDate,
-        MultipartFile photo,
+        String photoBase64,
 
         @JsonProperty("phone_number")
         String phoneNumber,

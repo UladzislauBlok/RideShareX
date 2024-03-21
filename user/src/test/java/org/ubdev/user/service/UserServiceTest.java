@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.ubdev.user.dto.CreateUserDto;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
-import org.ubdev.user.exception.DuplicateEmailException;
+import org.ubdev.user.exception.exceptions.DuplicateEmailException;
 import org.ubdev.user.mapper.UserMapper;
 import org.ubdev.user.model.User;
 import org.ubdev.user.repository.UserRepository;

@@ -20,6 +20,7 @@
     <spring-cloud.version>2023.0.0</spring-cloud.version>
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <lombok.version>1.18.30</lombok.version>
+    <org.testcontainers.postgresql.version>1.19.7</org.testcontainers.postgresql.version>
   </properties>
 
   <parent>

@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.ubdev.user.dto.CreateUserDto;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
-import org.ubdev.user.exception.DuplicateEmailException;
+import org.ubdev.user.exception.exceptions.DuplicateEmailException;
+import org.ubdev.user.exception.exceptions.UserNotFoundException;
 import org.ubdev.user.mapper.UserMapper;
 import org.ubdev.user.model.User;
 import org.ubdev.user.repository.UserRepository;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
@@ -25,14 +25,14 @@ public class UserServiceImpl implements UserService {
     public UserDto getById(UUID id) {
         return userRepository.findById(id)
                 .map(userMapper::userToUserDto)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
     public UserDto getByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::userToUserDto)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -55,14 +55,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(UUID id) {
         if (userRepository.existsById(id))
-            throw new NoSuchElementException();
+            throw new UserNotFoundException();
         userRepository.deleteById(id);
     }
 
     @Override
     public UserDto update(UserUpdateDto dto) {
         User user = userRepository.findById(dto.id())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(UserNotFoundException::new);
         userMapper.updateUserFromUserDto(dto, user);
         // TODO update image logic
         userRepository.save(user);

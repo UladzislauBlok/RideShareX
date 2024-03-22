@@ -12,6 +12,7 @@ import org.ubdev.user.dto.CreateUserDto;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
 import org.ubdev.user.exception.exceptions.DuplicateEmailException;
+import org.ubdev.user.exception.exceptions.UserNotFoundException;
 import org.ubdev.user.mapper.UserMapper;
 import org.ubdev.user.model.User;
 import org.ubdev.user.repository.UserRepository;
@@ -52,7 +53,7 @@ public class UserServiceTest {
     public void getById_ShouldThrownException_WhenIdIsIncorrect() {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> userService.getById(id));
+        assertThrows(UserNotFoundException.class, () -> userService.getById(id));
     }
 
     @Test
@@ -70,7 +71,7 @@ public class UserServiceTest {
     public void getByEmail_ShouldThrownException_WhenIdIsIncorrect() {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> userService.getByEmail(email));
+        assertThrows(UserNotFoundException.class, () -> userService.getByEmail(email));
     }
 
     @Test
@@ -126,7 +127,7 @@ public class UserServiceTest {
     public void delete_ShouldThrownException_WhenInputIsIncorrect() {
         when(userRepository.existsById(id)).thenReturn(true);
 
-        assertThrows(NoSuchElementException.class, () -> userService.deleteById(id));
+        assertThrows(UserNotFoundException.class, () -> userService.deleteById(id));
     }
 
     @Test
@@ -148,6 +149,6 @@ public class UserServiceTest {
     public void update_ShouldThrownException_WhenInputIsIncorrect() {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> userService.update(buildUserUpdateDto()));
+        assertThrows(UserNotFoundException.class, () -> userService.update(buildUserUpdateDto()));
     }
 }

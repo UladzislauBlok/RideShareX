@@ -41,6 +41,30 @@ services:
       - ridesharex-net
     mem_limit: 128m
 
+  api-gateway:
+    build: api-gateway
+    image: api-gateway:1.0.0
+    container_name: api-gateway
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+    ports:
+      - "8080:8080"
+    depends_on:
+      configuration-server:
+        condition: service_healthy
+      netflix-eureka:
+        condition: service_healthy
+    environment:
+      CONFIGURATION_SERVER_URI: http://configuration-server:8080/
+      EUREKA_URI: http://netflix-eureka:8761/eureka
+    restart: on-failure:5
+    networks:
+      - ridesharex-net
+    mem_limit: 128m
+
 networks:
   ridesharex-net:
     driver: bridge

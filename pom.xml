@@ -11,6 +11,7 @@
     <module>config-server</module>
       <module>netflix-eureka</module>
       <module>api-gateway</module>
+      <module>auth</module>
   </modules>
 
   <properties>

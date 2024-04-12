@@ -3,8 +3,6 @@
 --changeset ublok:1
 CREATE TABLE IF NOT EXISTS users (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(64) NOT NULL ,
-    surname VARCHAR(64) NOT NULL ,
     email VARCHAR(128) NOT NULL UNIQUE ,
     password VARCHAR(256) NOT NULL ,
     is_email_confirmed BOOLEAN NOT NULL

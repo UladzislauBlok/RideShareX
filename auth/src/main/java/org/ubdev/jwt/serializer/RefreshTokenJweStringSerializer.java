@@ -5,7 +5,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.AeadAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 import org.ubdev.jwt.model.Token;
 
 import javax.crypto.SecretKey;
@@ -16,7 +15,7 @@ public class RefreshTokenJweStringSerializer implements JwtTokenStringSerializer
     @Setter
     private AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
 
-    public RefreshTokenJweStringSerializer(@Value("${jwe.secret}") String secret) {
+    public RefreshTokenJweStringSerializer(String secret) {
         this.secret = secret;
     }
 

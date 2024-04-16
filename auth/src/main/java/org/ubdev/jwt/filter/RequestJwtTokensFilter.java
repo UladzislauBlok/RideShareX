@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,10 +24,12 @@ import java.io.IOException;
 
 import static org.springframework.http.HttpMethod.POST;
 
+@Builder
 @RequiredArgsConstructor
 public class RequestJwtTokensFilter extends OncePerRequestFilter {
 
     private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/jwt/tokens", POST.name());
+
     private final SecurityContextRepository securityContextRepository;
     private final TokenFactory<Authentication> refreshTokenFactory;
     private final TokenFactory<Token> accessTokenFactory;

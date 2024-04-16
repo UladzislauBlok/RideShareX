@@ -3,7 +3,6 @@ package org.ubdev.jwt.serializer;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.ubdev.jwt.model.Token;
 
 import java.security.Key;
@@ -12,7 +11,7 @@ import java.util.Date;
 public class AccessTokenJwsStringSerializer implements JwtTokenStringSerializer {
     private final String secret;
 
-    public AccessTokenJwsStringSerializer(@Value("${jws.secret}") String secret) {
+    public AccessTokenJwsStringSerializer(String secret) {
         this.secret = secret;
     }
 

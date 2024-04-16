@@ -28,7 +28,7 @@ import static org.springframework.http.HttpMethod.POST;
 @RequiredArgsConstructor
 public class RequestJwtTokensFilter extends OncePerRequestFilter {
 
-    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/jwt/tokens", POST.name());
+    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/jwt/tokens", POST.name());
 
     private final SecurityContextRepository securityContextRepository;
     private final TokenFactory<Authentication> refreshTokenFactory;

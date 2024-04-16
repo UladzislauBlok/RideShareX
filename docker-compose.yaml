@@ -112,6 +112,8 @@ services:
       DB_USERNAME_AUTH_MICROSERVICE: ${DB_USERNAME_AUTH_MICROSERVICE}
       DB_PASSWORD_AUTH_MICROSERVICE: ${DB_PASSWORD_AUTH_MICROSERVICE}
       SQL_URI: jdbc:postgresql://postgres-auth:5432/auth_db
+      JWE_SECRET_KEY: ${JWE_SECRET_KEY}
+      JWS_SECRET_KEY: ${JWS_SECRET_KEY}
     restart: on-failure:5
     networks:
       - ridesharex-net

@@ -1,11 +1,9 @@
 package org.ubdev.jwt.serializer;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.ubdev.jwt.model.Token;
+import org.ubdev.jwt.util.JwtUtils;
 
-import java.security.Key;
 import java.util.Date;
 
 public class AccessTokenJwsStringSerializer implements JwtTokenStringSerializer {
@@ -13,11 +11,6 @@ public class AccessTokenJwsStringSerializer implements JwtTokenStringSerializer 
 
     public AccessTokenJwsStringSerializer(String secret) {
         this.secret = secret;
-    }
-
-    public Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     @Override
@@ -33,7 +26,7 @@ public class AccessTokenJwsStringSerializer implements JwtTokenStringSerializer 
                 .expiration(Date.from(token.expiresAt()))
                 .add("authorities", token.authorities())
                 .and()
-                .signWith(getSignKey())
+                .signWith(JwtUtils.getSignKey(secret))
                 .compact();
     }
 }

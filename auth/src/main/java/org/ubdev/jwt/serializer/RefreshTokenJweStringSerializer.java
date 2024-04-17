@@ -1,13 +1,11 @@
 package org.ubdev.jwt.serializer;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.AeadAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import lombok.Setter;
 import org.ubdev.jwt.model.Token;
+import org.ubdev.jwt.util.JwtUtils;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 
 public class RefreshTokenJweStringSerializer implements JwtTokenStringSerializer {
@@ -17,11 +15,6 @@ public class RefreshTokenJweStringSerializer implements JwtTokenStringSerializer
 
     public RefreshTokenJweStringSerializer(String secret) {
         this.secret = secret;
-    }
-
-    public SecretKey getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     @Override
@@ -37,7 +30,7 @@ public class RefreshTokenJweStringSerializer implements JwtTokenStringSerializer
                 .expiration(Date.from(token.expiresAt()))
                 .add("authorities", token.authorities())
                 .and()
-                .encryptWith(getSignKey(), enc)
+                .encryptWith(JwtUtils.getSignKey(secret), enc)
                 .compact();
     }
 }

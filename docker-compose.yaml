@@ -83,6 +83,7 @@ services:
       EUREKA_URI: http://netflix-eureka:8761/eureka
       DB_AUTH_USERNAME: ${DB_AUTH_USERNAME}
       DB_AUTH_PASSWORD: ${DB_AUTH_PASSWORD}
+      JWS_SECRET_KEY: ${JWS_SECRET_KEY}
       SQL_URI: jdbc:postgresql://postgres-auth:5432/auth_db
     restart: on-failure:5
     networks:

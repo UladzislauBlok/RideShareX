@@ -4,13 +4,13 @@ services:
     image: postgres:latest
     container_name: postgres-auth
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_AUTH_MICROSERVICE} -d auth_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_AUTH_USERNAME} -d auth_db" ]
       interval: 10s
       timeout: 8s
       retries: 5
     environment:
-      POSTGRES_USER: ${DB_USERNAME_AUTH_MICROSERVICE}
-      POSTGRES_PASSWORD: ${DB_PASSWORD_AUTH_MICROSERVICE}
+      POSTGRES_USER: ${DB_AUTH_USERNAME}
+      POSTGRES_PASSWORD: ${DB_AUTH_PASSWORD}
       POSTGRES_DB: auth_db
       PGDATA: /data/postgres
     ports:
@@ -81,6 +81,9 @@ services:
     environment:
       CONFIGURATION_SERVER_URI: http://configuration-server:8080/
       EUREKA_URI: http://netflix-eureka:8761/eureka
+      DB_AUTH_USERNAME: ${DB_AUTH_USERNAME}
+      DB_AUTH_PASSWORD: ${DB_AUTH_PASSWORD}
+      SQL_URI: jdbc:postgresql://postgres-auth:5432/auth_db
     restart: on-failure:5
     networks:
       - ridesharex-net
@@ -109,8 +112,8 @@ services:
     environment:
       CONFIGURATION_SERVER_URI: http://configuration-server:8080/
       EUREKA_URI: http://netflix-eureka:8761/eureka
-      DB_USERNAME_AUTH_MICROSERVICE: ${DB_USERNAME_AUTH_MICROSERVICE}
-      DB_PASSWORD_AUTH_MICROSERVICE: ${DB_PASSWORD_AUTH_MICROSERVICE}
+      DB_AUTH_USERNAME: ${DB_AUTH_USERNAME}
+      DB_AUTH_PASSWORD: ${DB_AUTH_PASSWORD}
       SQL_URI: jdbc:postgresql://postgres-auth:5432/auth_db
       JWE_SECRET_KEY: ${JWE_SECRET_KEY}
       JWS_SECRET_KEY: ${JWS_SECRET_KEY}

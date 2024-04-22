@@ -11,4 +11,5 @@ public class JwtConstants {
     public static final String JWE_DESERIALIZATION_EXCEPTION_MESSAGE = "Failed to decrypt Jwe";
     public static final String INCORRECT_JWT_TOKEN_EXCEPTION_MESSAGE = "Incorrect token type";
     public static final String BANNED_TOKEN_EXCEPTION_MESSAGE = "This token is blocked";
+    public static final String TOKEN_EXPIRED_EXCEPTION_MESSAGE = "The token has expired";
 }

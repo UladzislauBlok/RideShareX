@@ -17,6 +17,7 @@ import org.ubdev.jwt.deserializer.JwtDeserializer;
 import org.ubdev.jwt.exception.BannedTokenException;
 import org.ubdev.jwt.exception.IncorrectJwtTokenException;
 import org.ubdev.jwt.exception.JweDeserializationException;
+import org.ubdev.jwt.exception.TokenExpiredException;
 import org.ubdev.jwt.factory.TokenFactory;
 import org.ubdev.jwt.model.Token;
 import org.ubdev.jwt.model.TokenResponse;
@@ -24,6 +25,7 @@ import org.ubdev.jwt.serializer.JwtTokenStringSerializer;
 import org.ubdev.repository.JdbcRepository;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import static org.ubdev.jwt.config.JwtConstants.*;
 
@@ -50,6 +52,9 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
                 var token = optionalRefreshToken.get();
                 if (!token.authorities().contains(JWT_REFRESH))
                     throw new IncorrectJwtTokenException(INCORRECT_JWT_TOKEN_EXCEPTION_MESSAGE);
+
+                if (token.expiresAt().isBefore(Instant.now()))
+                    throw new TokenExpiredException(TOKEN_EXPIRED_EXCEPTION_MESSAGE);
 
                 if (jdbcRepository.isTokenBanned(token))
                     throw new BannedTokenException(BANNED_TOKEN_EXCEPTION_MESSAGE);

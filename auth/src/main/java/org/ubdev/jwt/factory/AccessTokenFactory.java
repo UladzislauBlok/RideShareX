@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static org.ubdev.jwt.config.JwtConstants.AccessTokenTtlInMinutes;
+import static org.ubdev.jwt.config.JwtConstants.GRANT_PREFIX;
 
 public class AccessTokenFactory extends AbstractTokenFactory<Token> {
 
@@ -19,8 +20,8 @@ public class AccessTokenFactory extends AbstractTokenFactory<Token> {
         Instant now = Instant.now();
         return new Token(token.id(), token.subject(),
                 token.authorities().stream()
-                        .filter(authority -> authority.startsWith("GRANT_"))
-                        .map(authority -> authority.substring(6))
+                        .filter(authority -> authority.startsWith(GRANT_PREFIX))
+                        .map(authority -> authority.substring(GRANT_PREFIX.length()))
                         .toList(), now, now.plus(ttl), tokenType);
     }
 }

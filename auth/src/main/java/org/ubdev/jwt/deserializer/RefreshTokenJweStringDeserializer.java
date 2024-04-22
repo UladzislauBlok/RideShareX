@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.ubdev.jwt.config.JwtConstants.AUTHORITIES;
+
 @Slf4j
 public class RefreshTokenJweStringDeserializer implements JwtDeserializer {
     private final String secret;
@@ -31,7 +33,7 @@ public class RefreshTokenJweStringDeserializer implements JwtDeserializer {
             return Optional.of(new Token(
                     UUID.fromString(claims.getId()),
                     claims.getSubject(),
-                    claims.get("authorities", ArrayList.class),
+                    claims.get(AUTHORITIES, ArrayList.class),
                     claims.getIssuedAt().toInstant(),
                     claims.getExpiration().toInstant(),
                     TokenType.REFRESH

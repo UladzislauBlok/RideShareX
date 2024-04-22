@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.ubdev.jwt.config.JwtConstants.RefreshTokenTtlInDays;
+import static org.ubdev.jwt.config.JwtConstants.*;
 
 public class RefreshTokenFactory extends AbstractTokenFactory<Authentication> {
 
@@ -22,11 +22,11 @@ public class RefreshTokenFactory extends AbstractTokenFactory<Authentication> {
     @Override
     public Token createToken(Authentication authentication) {
         List<String> authorities = new ArrayList<>();
-        authorities.add("JWT_REFRESH");
-        authorities.add("JWT_LOGOUT");
+        authorities.add(JWT_REFRESH);
+        authorities.add(JWT_LOGOUT);
         authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .map(authority -> "GRANT_" + authority)
+                .map(authority -> GRANT_PREFIX + authority)
                 .forEach(authorities::add);
 
         Instant now = Instant.now();

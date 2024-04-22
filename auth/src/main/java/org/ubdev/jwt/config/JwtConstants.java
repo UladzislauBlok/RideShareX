@@ -8,4 +8,7 @@ public class JwtConstants {
     public static final String JWT_REFRESH = "JWT_REFRESH";
     public static final String JWT_LOGOUT = "JWT_LOGOUT";
     public static final String ACCESS_DENIED_MESSAGE = "User must be authenticated";
+    public static final String JWE_DESERIALIZATION_EXCEPTION_MESSAGE = "Failed to decrypt Jwe";
+    public static final String INCORRECT_JWT_TOKEN_EXCEPTION_MESSAGE = "Incorrect token type";
+    public static final String BANNED_TOKEN_EXCEPTION_MESSAGE = "This token is blocked";
 }

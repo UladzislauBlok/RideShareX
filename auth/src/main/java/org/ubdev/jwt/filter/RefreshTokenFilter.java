@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,8 +25,9 @@ import org.ubdev.repository.JdbcRepository;
 
 import java.io.IOException;
 
-import static org.ubdev.jwt.config.JwtConstants.JWT_REFRESH;
+import static org.ubdev.jwt.config.JwtConstants.*;
 
+@Builder
 @RequiredArgsConstructor
 public class RefreshTokenFilter extends OncePerRequestFilter {
     private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/jwt/refresh", HttpMethod.POST.name());
@@ -43,14 +45,14 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             if (authHeader != null) {
                 var optionalRefreshToken = jweDeserializer.deserialize(authHeader);
                 if (optionalRefreshToken.isEmpty())
-                    throw new JweDeserializationException("Failed to decrypt Jwe");
+                    throw new JweDeserializationException(JWE_DESERIALIZATION_EXCEPTION_MESSAGE);
 
                 var token = optionalRefreshToken.get();
                 if (!token.authorities().contains(JWT_REFRESH))
-                    throw new IncorrectJwtTokenException("Incorrect token type");
+                    throw new IncorrectJwtTokenException(INCORRECT_JWT_TOKEN_EXCEPTION_MESSAGE);
 
                 if (jdbcRepository.isTokenBanned(token))
-                    throw new BannedTokenException("This token is blocked");
+                    throw new BannedTokenException(BANNED_TOKEN_EXCEPTION_MESSAGE);
 
                 var accessToken = this.accessTokenFactory.createToken(token);
 

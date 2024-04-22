@@ -1,6 +1,5 @@
 package org.ubdev.security.deserializer;
 
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +11,8 @@ import org.ubdev.security.util.JwtUtils;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.ubdev.security.config.Constants.AUTHORITIES;
 
 @Slf4j
 @Component
@@ -34,7 +35,7 @@ public class AccessTokenJwsStringDeserializer implements JwtDeserializer {
             return Optional.of(new Token(
                     UUID.fromString(claims.getId()),
                     claims.getSubject(),
-                    claims.get("authorities", ArrayList.class),
+                    claims.get(AUTHORITIES, ArrayList.class),
                     claims.getIssuedAt().toInstant(),
                     claims.getExpiration().toInstant(),
                     TokenType.ACCESS

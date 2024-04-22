@@ -15,6 +15,8 @@ import org.ubdev.security.path.PathConstants;
 import org.ubdev.security.repository.JdbcRepository;
 import reactor.core.publisher.Mono;
 
+import static org.ubdev.security.config.Constants.*;
+
 @Slf4j
 @Order(1)
 @Component
@@ -40,10 +42,10 @@ public class JwtDeserializationFilter implements GlobalFilter {
         if (authHeaders == null)
             return buildUnauthorizedResponse(exchange);
         log.info(authHeaders);
-        if (!authHeaders.startsWith("Bearer "))
+        if (!authHeaders.startsWith(BEARER_PREFIX))
             return buildUnauthorizedResponse(exchange);
 
-        var jwtTokenString = authHeaders.substring(7);
+        var jwtTokenString = authHeaders.substring(BEARER_PREFIX.length());
         log.info(jwtTokenString);
         var authToken = jwtDeserializer.deserialize(jwtTokenString);
         if (authToken.isEmpty())
@@ -59,15 +61,15 @@ public class JwtDeserializationFilter implements GlobalFilter {
         return exchange.mutate().request(
                         exchange.getRequest().mutate()
                                 .headers(httpHeaders -> httpHeaders.remove(HttpHeaders.AUTHORIZATION))
-                                .header("Subject", token.subject())
-                                .header("Authorities", String.join(",", token.authorities()))
+                                .header(SUBJECT, token.subject())
+                                .header(AUTHORITIES, String.join(",", token.authorities()))
                                 .build())
                 .build();
     }
 
     private Mono<Void> buildUnauthorizedResponse(ServerWebExchange exchange) {
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-        exchange.getResponse().getHeaders().add("X-Message", "Invalid token");
+        exchange.getResponse().getHeaders().add(X_MESSAGE_HEADER, INVALID_TOKEN_MESSAGE);
         return Mono.empty();
     }
 }

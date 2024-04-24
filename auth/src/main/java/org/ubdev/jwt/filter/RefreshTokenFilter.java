@@ -14,10 +14,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
-import org.ubdev.jwt.exception.BannedTokenException;
-import org.ubdev.jwt.exception.IncorrectJwtTokenException;
-import org.ubdev.jwt.exception.JweDeserializationException;
-import org.ubdev.jwt.exception.TokenExpiredException;
+import org.ubdev.jwt.exception.*;
 import org.ubdev.jwt.factory.TokenFactory;
 import org.ubdev.jwt.model.Token;
 import org.ubdev.jwt.model.TokenResponse;
@@ -32,7 +29,7 @@ import static org.ubdev.jwt.config.JwtConstants.*;
 @Builder
 @RequiredArgsConstructor
 public class RefreshTokenFilter extends OncePerRequestFilter {
-    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/jwt/refresh", HttpMethod.POST.name());
+    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/jwt/refresh", HttpMethod.POST.name());
     private final JwtDeserializer jweDeserializer;
     private final TokenFactory<Token> accessTokenFactory;
     private final JwtTokenStringSerializer accessTokenStringSerializer;
@@ -45,6 +42,11 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         if (requestMatcher.matches(request)) {
             var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             if (authHeader != null) {
+
+                if (!authHeader.startsWith(BEARER_PREFIX))
+                    throw new IncorrectTokenTypeException(INCORRECT_TOKEN_TYPE_EXCEPTION);
+                authHeader = authHeader.substring(BEARER_PREFIX.length());
+
                 var optionalRefreshToken = jweDeserializer.deserialize(authHeader);
                 if (optionalRefreshToken.isEmpty())
                     throw new JweDeserializationException(JWE_DESERIALIZATION_EXCEPTION_MESSAGE);

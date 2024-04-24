@@ -9,8 +9,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
 import org.ubdev.jwt.factory.TokenFactory;
@@ -61,6 +61,6 @@ public class JwtAuthenticationConfigurer
                 .build();
 
         builder.addFilterAfter(requestJwtTokensFilter, ExceptionTranslationFilter.class)
-                .addFilterBefore(refreshJwtTokensFilter, CsrfFilter.class);
+                .addFilterBefore(refreshJwtTokensFilter, BasicAuthenticationFilter.class);
     }
 }

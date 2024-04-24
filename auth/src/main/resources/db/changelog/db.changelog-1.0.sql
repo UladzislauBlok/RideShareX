@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS authority (
 --changeset ublok:3
 CREATE TABLE IF NOT EXISTS user_authority (
     user_id uuid REFERENCES users(id),
-    authority_id uuid REFERENCES users(id),
+    authority_id uuid REFERENCES authority(id),
     PRIMARY KEY (user_id, authority_id)
 );
 

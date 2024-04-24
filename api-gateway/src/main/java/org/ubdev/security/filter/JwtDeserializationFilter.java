@@ -15,6 +15,8 @@ import org.ubdev.security.path.PathConstants;
 import org.ubdev.security.repository.JdbcRepository;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+
 import static org.ubdev.security.config.Constants.*;
 
 @Slf4j
@@ -49,6 +51,8 @@ public class JwtDeserializationFilter implements GlobalFilter {
         log.info(jwtTokenString);
         var authToken = jwtDeserializer.deserialize(jwtTokenString);
         if (authToken.isEmpty())
+            return buildUnauthorizedResponse(exchange);
+        if (authToken.get().expiresAt().isBefore(Instant.now()))
             return buildUnauthorizedResponse(exchange);
         if (jdbcRepository.isTokenBanned(authToken.get()))
             return buildUnauthorizedResponse(exchange);

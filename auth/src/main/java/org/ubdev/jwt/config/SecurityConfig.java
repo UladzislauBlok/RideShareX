@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,10 +12,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.ubdev.jwt.configurer.JwtAuthenticationConfigurer;
+import org.ubdev.jwt.deserializer.RefreshTokenJweStringDeserializer;
 import org.ubdev.jwt.factory.AccessTokenFactory;
 import org.ubdev.jwt.factory.RefreshTokenFactory;
 import org.ubdev.jwt.serializer.AccessTokenJwsStringSerializer;
 import org.ubdev.jwt.serializer.RefreshTokenJweStringSerializer;
+import org.ubdev.repository.JdbcRepository;
 
 @EnableWebSecurity
 @Configuration
@@ -24,7 +25,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationConfigurer jwtAuthenticationConfigurer(ObjectMapper objectMapper,
-                                                                   JdbcTemplate jdbcTemplate,
+                                                                   JdbcRepository jdbcRepository,
                                                                    @Value("${jwt.secret.jwe}") String secretStringJwe,
                                                                    @Value("${jwt.secret.jws}") String secretStringJws) {
         return new JwtAuthenticationConfigurer(securityContextRepository(),
@@ -32,8 +33,9 @@ public class SecurityConfig {
                 new AccessTokenFactory(),
                 new RefreshTokenJweStringSerializer(secretStringJwe),
                 new AccessTokenJwsStringSerializer(secretStringJws),
+                new RefreshTokenJweStringDeserializer(secretStringJwe),
                 objectMapper,
-                jdbcTemplate);
+                jdbcRepository);
     }
 
     @Bean

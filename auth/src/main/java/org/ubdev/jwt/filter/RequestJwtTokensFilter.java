@@ -23,6 +23,7 @@ import org.ubdev.jwt.serializer.JwtTokenStringSerializer;
 import java.io.IOException;
 
 import static org.springframework.http.HttpMethod.POST;
+import static org.ubdev.jwt.config.JwtConstants.ACCESS_DENIED_MESSAGE;
 
 @Builder
 @RequiredArgsConstructor
@@ -58,7 +59,7 @@ public class RequestJwtTokensFilter extends OncePerRequestFilter {
                 }
             }
 
-            throw new AccessDeniedException("User must be authenticated");
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE);
         }
 
         filterChain.doFilter(request, response);

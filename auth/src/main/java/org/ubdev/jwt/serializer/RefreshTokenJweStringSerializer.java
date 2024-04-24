@@ -8,6 +8,8 @@ import org.ubdev.jwt.util.JwtUtils;
 
 import java.util.Date;
 
+import static org.ubdev.jwt.config.JwtConstants.AUTHORITIES;
+
 public class RefreshTokenJweStringSerializer implements JwtTokenStringSerializer {
     private final String secret;
     @Setter
@@ -28,7 +30,7 @@ public class RefreshTokenJweStringSerializer implements JwtTokenStringSerializer
                 .subject(token.subject())
                 .issuedAt(Date.from(token.createdAt()))
                 .expiration(Date.from(token.expiresAt()))
-                .add("authorities", token.authorities())
+                .add(AUTHORITIES, token.authorities())
                 .and()
                 .encryptWith(JwtUtils.getSignKey(secret), enc)
                 .compact();

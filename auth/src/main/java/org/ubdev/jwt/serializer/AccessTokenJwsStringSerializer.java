@@ -6,6 +6,8 @@ import org.ubdev.jwt.util.JwtUtils;
 
 import java.util.Date;
 
+import static org.ubdev.jwt.config.JwtConstants.AUTHORITIES;
+
 public class AccessTokenJwsStringSerializer implements JwtTokenStringSerializer {
     private final String secret;
 
@@ -24,7 +26,7 @@ public class AccessTokenJwsStringSerializer implements JwtTokenStringSerializer 
                 .subject(token.subject())
                 .issuedAt(Date.from(token.createdAt()))
                 .expiration(Date.from(token.expiresAt()))
-                .add("authorities", token.authorities())
+                .add(AUTHORITIES, token.authorities())
                 .and()
                 .signWith(JwtUtils.getSignKey(secret))
                 .compact();

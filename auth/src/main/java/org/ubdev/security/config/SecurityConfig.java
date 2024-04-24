@@ -1,4 +1,4 @@
-package org.ubdev.jwt.config;
+package org.ubdev.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;

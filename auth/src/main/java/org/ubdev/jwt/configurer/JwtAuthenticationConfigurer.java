@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
 import org.ubdev.jwt.factory.TokenFactory;
+import org.ubdev.jwt.filter.JwtLogoutFilter;
 import org.ubdev.jwt.filter.RefreshTokenFilter;
 import org.ubdev.jwt.filter.RequestJwtTokensFilter;
 import org.ubdev.jwt.model.Token;
@@ -35,9 +36,18 @@ public class JwtAuthenticationConfigurer
     public void configure(HttpSecurity builder) throws Exception {
         var requestJwtTokensFilter = buildRequestJwtTokenFilter();
         var refreshJwtTokensFilter = buildRefreshTokenFilter();
+        var jwtLogoutFilter = buildJwtLogoutFilter();
 
         builder.addFilterAfter(requestJwtTokensFilter, ExceptionTranslationFilter.class)
-                .addFilterBefore(refreshJwtTokensFilter, BasicAuthenticationFilter.class);
+                .addFilterBefore(refreshJwtTokensFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtLogoutFilter, BasicAuthenticationFilter.class);
+    }
+
+    private JwtLogoutFilter buildJwtLogoutFilter() {
+        return JwtLogoutFilter.builder()
+                .jweDeserializer(jweDeserializer)
+                .jdbcRepository(jdbcRepository)
+                .build();
     }
 
     private RefreshTokenFilter buildRefreshTokenFilter() {

@@ -3,15 +3,12 @@ package org.ubdev.jwt.configurer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
 import org.ubdev.jwt.factory.TokenFactory;
 import org.ubdev.jwt.filter.RefreshTokenFilter;
@@ -35,16 +32,26 @@ public class JwtAuthenticationConfigurer
     private final JdbcRepository jdbcRepository;
 
     @Override
-    public void init(HttpSecurity builder) throws Exception {
-        var csrfConfigurer = builder.getConfigurer(CsrfConfigurer.class);
-        if (csrfConfigurer != null) {
-            csrfConfigurer.ignoringRequestMatchers(new AntPathRequestMatcher("/api/jwt/tokens", HttpMethod.POST.name()));
-        }
+    public void configure(HttpSecurity builder) throws Exception {
+        var requestJwtTokensFilter = buildRequestJwtTokenFilter();
+        var refreshJwtTokensFilter = buildRefreshTokenFilter();
+
+        builder.addFilterAfter(requestJwtTokensFilter, ExceptionTranslationFilter.class)
+                .addFilterBefore(refreshJwtTokensFilter, BasicAuthenticationFilter.class);
     }
 
-    @Override
-    public void configure(HttpSecurity builder) throws Exception {
-        var requestJwtTokensFilter = RequestJwtTokensFilter.builder()
+    private RefreshTokenFilter buildRefreshTokenFilter() {
+        return RefreshTokenFilter.builder()
+                .jweDeserializer(jweDeserializer)
+                .accessTokenFactory(accessTokenFactory)
+                .accessTokenStringSerializer(accessTokenSerializer)
+                .objectMapper(objectMapper)
+                .jdbcRepository(jdbcRepository)
+                .build();
+    }
+
+    private RequestJwtTokensFilter buildRequestJwtTokenFilter() {
+        return RequestJwtTokensFilter.builder()
                 .securityContextRepository(securityContextRepository)
                 .refreshTokenFactory(refreshTokenFactory)
                 .accessTokenFactory(accessTokenFactory)
@@ -52,15 +59,5 @@ public class JwtAuthenticationConfigurer
                 .accessTokenSerializer(accessTokenSerializer)
                 .objectMapper(objectMapper)
                 .build();
-        var refreshJwtTokensFilter = RefreshTokenFilter.builder()
-                .jweDeserializer(jweDeserializer)
-                .accessTokenFactory(accessTokenFactory)
-                .accessTokenStringSerializer(accessTokenSerializer)
-                .objectMapper(objectMapper)
-                .jdbcRepository(jdbcRepository)
-                .build();
-
-        builder.addFilterAfter(requestJwtTokensFilter, ExceptionTranslationFilter.class)
-                .addFilterBefore(refreshJwtTokensFilter, BasicAuthenticationFilter.class);
     }
 }

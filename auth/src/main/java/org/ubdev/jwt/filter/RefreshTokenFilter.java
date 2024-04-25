@@ -53,7 +53,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
                 var token = optionalRefreshToken.get();
                 if (!token.authorities().contains(JWT_REFRESH))
-                    throw new IncorrectJwtTokenException(INCORRECT_JWT_TOKEN_EXCEPTION_MESSAGE);
+                    throw new UnauthorizedAuthoritiesException(INCORRECT_JWT_TOKEN_EXCEPTION_MESSAGE);
 
                 if (token.expiresAt().isBefore(Instant.now()))
                     throw new TokenExpiredException(TOKEN_EXPIRED_EXCEPTION_MESSAGE);

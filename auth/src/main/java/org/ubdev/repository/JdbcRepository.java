@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface JdbcRepository {
     boolean isTokenBanned(Token token);
     Optional<UserDetails> getUserByEmail(String email);
+    void banToken(Token token);
 }

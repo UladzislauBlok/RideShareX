@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.ubdev.jwt.model.Token;
 
+import java.util.Date;
 import java.util.Optional;
 
 import static org.ubdev.repository.SqlQueries.*;
@@ -35,5 +36,10 @@ public class JdbcRepositoryImpl implements JdbcRepository {
                                                 new SimpleGrantedAuthority(rs1.getString("authority")),
                                         email))
                         .build(), email).stream().findFirst();
+    }
+
+    @Override
+    public void banToken(Token token) {
+        jdbcTemplate.update(BAN_TOKEN_QUERY, token.id(), Date.from(token.expiresAt()));
     }
 }

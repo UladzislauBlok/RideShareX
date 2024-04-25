@@ -12,4 +12,7 @@ public class SqlQueries {
             JOIN user_authority ua ON a.id = ua.authority_id\s
             JOIN users u ON u.id = ua.user_id\s
             WHERE u.email = ?""";
+
+    public static final String BAN_TOKEN_QUERY = """
+            INSERT id, c_keep_until INTO deactivated_token (id, c_keep_until) VALUES (?, ?)""";
 }

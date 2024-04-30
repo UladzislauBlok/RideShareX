@@ -18,6 +18,11 @@ import org.ubdev.jwt.model.Token;
 import org.ubdev.jwt.serializer.JwtTokenStringSerializer;
 import org.ubdev.repository.JdbcRepository;
 
+import java.util.List;
+
+import static org.ubdev.jwt.config.JwtConstants.JWT_LOGOUT;
+import static org.ubdev.jwt.config.JwtConstants.JWT_REFRESH;
+
 @Builder
 @RequiredArgsConstructor
 public class JwtAuthenticationConfigurer
@@ -47,6 +52,7 @@ public class JwtAuthenticationConfigurer
         return JwtLogoutFilter.builder()
                 .jweDeserializer(jweDeserializer)
                 .jdbcRepository(jdbcRepository)
+                .requiredAuthorities(List.of(JWT_LOGOUT))
                 .build();
     }
 
@@ -57,6 +63,7 @@ public class JwtAuthenticationConfigurer
                 .accessTokenStringSerializer(accessTokenSerializer)
                 .objectMapper(objectMapper)
                 .jdbcRepository(jdbcRepository)
+                .requiredAuthorities(List.of(JWT_REFRESH))
                 .build();
     }
 

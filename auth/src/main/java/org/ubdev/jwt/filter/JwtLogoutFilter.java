@@ -1,64 +1,56 @@
 package org.ubdev.jwt.filter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
-import org.ubdev.jwt.exception.*;
+import org.ubdev.jwt.model.Token;
 import org.ubdev.repository.JdbcRepository;
 
-import java.io.IOException;
-import java.time.Instant;
+import java.util.List;
 
-import static org.ubdev.jwt.config.JwtConstants.*;
+public class JwtLogoutFilter extends BaseJweFilter {
 
-@Builder
-@RequiredArgsConstructor
-public class JwtLogoutFilter extends OncePerRequestFilter {
-    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/jwt/logout", HttpMethod.POST.name());
-    private final JwtDeserializer jweDeserializer;
-    private final JdbcRepository jdbcRepository;
+    public JwtLogoutFilter(JwtDeserializer jweDeserializer, JdbcRepository jdbcRepository, List<String> requiredAuthorities) {
+        super(new AntPathRequestMatcher("/api/jwt/logout", HttpMethod.POST.name()), 
+                jweDeserializer, jdbcRepository, requiredAuthorities);
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-        if (requestMatcher.matches(request)) {
-            var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (authHeader != null) {
+    protected void doFinalFilterOperation(Token token, HttpServletResponse response) {
+        jdbcRepository.banToken(token);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
 
-                if (!authHeader.startsWith(BEARER_PREFIX))
-                    throw new IncorrectTokenTypeException(INCORRECT_TOKEN_TYPE_EXCEPTION);
-                authHeader = authHeader.substring(BEARER_PREFIX.length());
+    public static TokenLogoutFilterBuilder builder() {
+        return new TokenLogoutFilterBuilder();
+    }
 
-                var optionalRefreshToken = jweDeserializer.deserialize(authHeader);
-                if (optionalRefreshToken.isEmpty())
-                    throw new JweDeserializationException(JWE_DESERIALIZATION_EXCEPTION_MESSAGE);
+    public static class TokenLogoutFilterBuilder {
+        private JwtDeserializer jweDeserializer;
+        private JdbcRepository jdbcRepository;
+        private List<String> requiredAuthorities;
 
-                var token = optionalRefreshToken.get();
-                if (!token.authorities().contains(JWT_LOGOUT))
-                    throw new UnauthorizedAuthoritiesException(INCORRECT_JWT_TOKEN_EXCEPTION_MESSAGE);
-
-                if (token.expiresAt().isBefore(Instant.now()))
-                    throw new TokenExpiredException(TOKEN_EXPIRED_EXCEPTION_MESSAGE);
-
-                if (jdbcRepository.isTokenBanned(token))
-                    throw new BannedTokenException(BANNED_TOKEN_EXCEPTION_MESSAGE);
-
-                jdbcRepository.banToken(token);
-
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                return;
-            }
+        TokenLogoutFilterBuilder() {
         }
 
-        filterChain.doFilter(request, response);
+        public JwtLogoutFilter.TokenLogoutFilterBuilder jweDeserializer(final JwtDeserializer jweDeserializer) {
+            this.jweDeserializer = jweDeserializer;
+            return this;
+        }
+
+        public JwtLogoutFilter.TokenLogoutFilterBuilder jdbcRepository(final JdbcRepository jdbcRepository) {
+            this.jdbcRepository = jdbcRepository;
+            return this;
+        }
+
+        public JwtLogoutFilter.TokenLogoutFilterBuilder requiredAuthorities(final List<String> requiredAuthorities) {
+            this.requiredAuthorities = requiredAuthorities;
+            return this;
+        }
+
+        public JwtLogoutFilter build() {
+            return new JwtLogoutFilter(this.jweDeserializer, this.jdbcRepository, this.requiredAuthorities);
+        }
     }
 }

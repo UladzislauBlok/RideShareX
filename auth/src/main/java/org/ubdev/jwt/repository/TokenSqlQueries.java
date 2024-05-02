@@ -5,5 +5,5 @@ public class TokenSqlQueries {
             SELECT EXISTS(SELECT id FROM deactivated_token WHERE id = ?)""";
 
     public static final String BAN_TOKEN_QUERY = """
-            INSERT id, c_keep_until INTO deactivated_token (id, c_keep_until) VALUES (?, ?)""";
+            INSERT INTO deactivated_token (id, c_keep_until) VALUES (?, ?)""";
 }

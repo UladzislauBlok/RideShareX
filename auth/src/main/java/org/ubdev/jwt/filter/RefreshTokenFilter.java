@@ -11,7 +11,7 @@ import org.ubdev.jwt.factory.TokenFactory;
 import org.ubdev.jwt.model.Token;
 import org.ubdev.jwt.model.TokenResponse;
 import org.ubdev.jwt.serializer.JwtTokenStringSerializer;
-import org.ubdev.repository.JdbcRepository;
+import org.ubdev.jwt.repository.TokenRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,11 +21,11 @@ public class RefreshTokenFilter extends BaseJweFilter {
     private final JwtTokenStringSerializer accessTokenStringSerializer;
     private final ObjectMapper objectMapper;
 
-    public RefreshTokenFilter(JwtDeserializer jweDeserializer, JdbcRepository jdbcRepository, 
+    public RefreshTokenFilter(JwtDeserializer jweDeserializer, TokenRepository tokenRepository,
                               List<String> requiredAuthorities, TokenFactory<Token> accessTokenFactory,
                               JwtTokenStringSerializer accessTokenStringSerializer, ObjectMapper objectMapper) {
         super(new AntPathRequestMatcher("/api/jwt/refresh", HttpMethod.POST.name())
-                ,jweDeserializer, jdbcRepository, requiredAuthorities);
+                ,jweDeserializer, tokenRepository, requiredAuthorities);
         
         this.accessTokenFactory = accessTokenFactory;
         this.accessTokenStringSerializer = accessTokenStringSerializer;
@@ -49,7 +49,7 @@ public class RefreshTokenFilter extends BaseJweFilter {
 
     public static class RefreshTokenFilterBuilder {
         private JwtDeserializer jweDeserializer;
-        private JdbcRepository jdbcRepository;
+        private TokenRepository tokenRepository;
         private List<String> requiredAuthorities;
         private TokenFactory<Token> accessTokenFactory;
         private JwtTokenStringSerializer accessTokenStringSerializer;
@@ -63,8 +63,8 @@ public class RefreshTokenFilter extends BaseJweFilter {
             return this;
         }
 
-        public RefreshTokenFilter.RefreshTokenFilterBuilder jdbcRepository(final JdbcRepository jdbcRepository) {
-            this.jdbcRepository = jdbcRepository;
+        public RefreshTokenFilter.RefreshTokenFilterBuilder tokenRepository(final TokenRepository tokenRepository) {
+            this.tokenRepository = tokenRepository;
             return this;
         }
 
@@ -89,7 +89,7 @@ public class RefreshTokenFilter extends BaseJweFilter {
         }
 
         public RefreshTokenFilter build() {
-            return new RefreshTokenFilter(this.jweDeserializer, this.jdbcRepository, this.requiredAuthorities,
+            return new RefreshTokenFilter(this.jweDeserializer, this.tokenRepository, this.requiredAuthorities,
                     this.accessTokenFactory, this.accessTokenStringSerializer, this.objectMapper);
         }
     }

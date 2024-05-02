@@ -18,7 +18,7 @@ import org.ubdev.jwt.factory.AccessTokenFactory;
 import org.ubdev.jwt.factory.RefreshTokenFactory;
 import org.ubdev.jwt.serializer.AccessTokenJwsStringSerializer;
 import org.ubdev.jwt.serializer.RefreshTokenJweStringSerializer;
-import org.ubdev.repository.JdbcRepository;
+import org.ubdev.jwt.repository.TokenRepository;
 
 @EnableWebSecurity
 @Configuration
@@ -26,7 +26,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationConfigurer jwtAuthenticationConfigurer(ObjectMapper objectMapper,
-                                                                   JdbcRepository jdbcRepository,
+                                                                   TokenRepository tokenRepository,
                                                                    @Value("${jwt.secret.jwe}") String secretStringJwe,
                                                                    @Value("${jwt.secret.jws}") String secretStringJws) {
         return new JwtAuthenticationConfigurer(securityContextRepository(),
@@ -36,7 +36,7 @@ public class SecurityConfig {
                 new AccessTokenJwsStringSerializer(secretStringJws),
                 new RefreshTokenJweStringDeserializer(secretStringJwe),
                 objectMapper,
-                jdbcRepository);
+                tokenRepository);
     }
 
     @Bean

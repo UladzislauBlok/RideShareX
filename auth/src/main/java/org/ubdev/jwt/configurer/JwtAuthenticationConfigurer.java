@@ -16,7 +16,7 @@ import org.ubdev.jwt.filter.RefreshTokenFilter;
 import org.ubdev.jwt.filter.RequestJwtTokensFilter;
 import org.ubdev.jwt.model.Token;
 import org.ubdev.jwt.serializer.JwtTokenStringSerializer;
-import org.ubdev.repository.JdbcRepository;
+import org.ubdev.jwt.repository.TokenRepository;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class JwtAuthenticationConfigurer
     private final JwtTokenStringSerializer accessTokenSerializer;
     private final JwtDeserializer jweDeserializer;
     private final ObjectMapper objectMapper;
-    private final JdbcRepository jdbcRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     public void configure(HttpSecurity builder) throws Exception {
@@ -51,7 +51,7 @@ public class JwtAuthenticationConfigurer
     private JwtLogoutFilter buildJwtLogoutFilter() {
         return JwtLogoutFilter.builder()
                 .jweDeserializer(jweDeserializer)
-                .jdbcRepository(jdbcRepository)
+                .jdbcRepository(tokenRepository)
                 .requiredAuthorities(List.of(JWT_LOGOUT))
                 .build();
     }
@@ -62,7 +62,7 @@ public class JwtAuthenticationConfigurer
                 .accessTokenFactory(accessTokenFactory)
                 .accessTokenStringSerializer(accessTokenSerializer)
                 .objectMapper(objectMapper)
-                .jdbcRepository(jdbcRepository)
+                .tokenRepository(tokenRepository)
                 .requiredAuthorities(List.of(JWT_REFRESH))
                 .build();
     }

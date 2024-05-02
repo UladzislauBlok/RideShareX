@@ -11,7 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
 import org.ubdev.jwt.exception.*;
 import org.ubdev.jwt.model.Token;
-import org.ubdev.repository.JdbcRepository;
+import org.ubdev.jwt.repository.TokenRepository;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -24,7 +24,7 @@ import static org.ubdev.jwt.config.JwtConstants.*;
 public abstract class BaseJweFilter extends OncePerRequestFilter {
     protected final RequestMatcher requestMatcher;
     protected final JwtDeserializer jweDeserializer;
-    protected final JdbcRepository jdbcRepository;
+    protected final TokenRepository tokenRepository;
     protected final List<String> requiredAuthorities;
 
     @Override
@@ -51,7 +51,7 @@ public abstract class BaseJweFilter extends OncePerRequestFilter {
     protected abstract void doFinalFilterOperation(Token token, HttpServletResponse response) throws ServletException, IOException;
 
     protected void checkIsTokenBanned(Token token) {
-        if (jdbcRepository.isTokenBanned(token))
+        if (tokenRepository.isTokenBanned(token))
             throw new BannedTokenException(BANNED_TOKEN_EXCEPTION_MESSAGE);
     }
 

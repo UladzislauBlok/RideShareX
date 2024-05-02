@@ -20,6 +20,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <spring-cloud.version>2023.0.0</spring-cloud.version>
     <jjwt.version>0.12.5</jjwt.version>
+    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
   </properties>
 
   <parent>

@@ -30,4 +30,11 @@ public class UserRepositoryImpl implements UserRepository {
                                         email))
                         .build(), email).stream().findFirst();
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return jdbcTemplate.query(GET_USER_BY_EMAIL_QUERY, (rs, i) -> rs.getString("email"), email).stream().findFirst().isPresent();
+    }
+
+
 }

@@ -9,4 +9,13 @@ public class UserSqlQueries {
             JOIN user_authority ua ON a.id = ua.authority_id\s
             JOIN users u ON u.id = ua.user_id\s
             WHERE u.email = ?""";
+
+    public static final String INSERT_USER_QUERY = """
+            INSERT INTO users(id, email, password, is_email_confirmed) VALUES (?, ?, ?, ?)
+            """;
+
+    public static final String ADD_AUTHORITY_TO_USER_QUERY = """
+            INSERT INTO user_authority(user_id, authority_id) VALUES (?,\s
+            (SELECT id FROM authority WHERE authority = 'ROLE_USER'))
+            """;
 }

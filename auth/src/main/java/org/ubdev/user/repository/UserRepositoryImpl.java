@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static org.ubdev.user.repository.UserSqlQueries.GET_USER_AUTHORITY_BY_USER_ID_QUERY;
-import static org.ubdev.user.repository.UserSqlQueries.GET_USER_BY_EMAIL_QUERY;
+import static org.ubdev.user.repository.UserSqlQueries.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,6 +33,12 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean existsByEmail(String email) {
         return jdbcTemplate.query(GET_USER_BY_EMAIL_QUERY, (rs, i) -> rs.getString("email"), email).stream().findFirst().isPresent();
+    }
+
+    @Override
+    public void saveUser(org.ubdev.user.model.User user) {
+        jdbcTemplate.update(INSERT_USER_QUERY, user.getId(), user.getEmail(), user.getPassword(), user.isEmailConfirmed());
+        jdbcTemplate.update(ADD_AUTHORITY_TO_USER_QUERY, user.getId());
     }
 
 

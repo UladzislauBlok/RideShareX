@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.ubdev.user.dto.CreateUserDto;
-import org.ubdev.user.dto.CreateUserMicroserviceRequestDto;
+import org.ubdev.user.dto.CreateUserMessage;
 import org.ubdev.user.exception.EmailAlreadyExistException;
 import org.ubdev.user.mapper.UserMapper;
 import org.ubdev.user.model.User;
@@ -29,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
         userRepository.saveUser(user);
         String photoPath = user.getId().toString() + image.getOriginalFilename();
-        CreateUserMicroserviceRequestDto requestDto = userMapper.mapCreateRequestToUserMicroserviceRequest(dto, photoPath);
+        CreateUserMessage message = userMapper.mapCreateRequestToCreateUserMessage(dto, photoPath);
+
+        // publish message for imageMicro and UserMicro
     }
 }

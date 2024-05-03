@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.ubdev.user.dto.CreateUserDto;
-import org.ubdev.user.dto.CreateUserMicroserviceRequestDto;
+import org.ubdev.user.dto.CreateUserMessage;
 import org.ubdev.user.model.User;
 
 @Mapper(componentModel = "spring")
@@ -19,5 +19,5 @@ public interface UserMapper {
     @Mappings({
             @Mapping(target = "id", expression = "java( UUID.randomUUID().toString() )"),
     })
-    CreateUserMicroserviceRequestDto mapCreateRequestToUserMicroserviceRequest(CreateUserDto createUserDto, String photoPath);
+    CreateUserMessage mapCreateRequestToCreateUserMessage(CreateUserDto createUserDto, String photoPath);
 }

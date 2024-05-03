@@ -5,7 +5,7 @@ import org.ubdev.user.model.Preference;
 
 import java.util.UUID;
 
-public record CreateUserMicroserviceRequestDto(
+public record CreateUserMessage (
         UUID id,
         String name,
         String surname,

@@ -30,7 +30,8 @@ public class JwtDeserializationFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        var requestPath = exchange.getRequest().getPath().value();
+        var requestPath = exchange.getRequest().getMethod() + "|"
+                          + exchange.getRequest().getPath().value();
         log.info("requestPath: {}", requestPath);
 
         if (PathConstants.PUBLIC_PATH.contains(requestPath))

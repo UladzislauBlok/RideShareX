@@ -1,7 +1,7 @@
 package org.ubdev.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.ubdev.user.dto.CreateUserDto;
@@ -14,7 +14,7 @@ import org.ubdev.user.repository.UserRepository;
 import static org.ubdev.user.config.UserConstants.EMAIL_ALREADY_EXIST_MESSAGE;
 
 @Transactional
-@Component
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;

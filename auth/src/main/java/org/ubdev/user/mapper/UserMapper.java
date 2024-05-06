@@ -11,13 +11,13 @@ import org.ubdev.user.model.User;
 public interface UserMapper {
 
     @Mappings({
-            @Mapping(target = "id", expression = "java( UUID.randomUUID().toString() )"),
-            @Mapping(target = "isEmailConfirmed", expression = "java(false)"),
+            @Mapping(target = "id", expression = "java( UUID.randomUUID() )"),
+            @Mapping(target = "emailConfirmed", expression = "java(false)"),
     })
     User mapCreateRequestToUser(CreateUserDto createUserDto);
 
     @Mappings({
-            @Mapping(target = "id", expression = "java( UUID.randomUUID().toString() )"),
+            @Mapping(target = "id", expression = "java( UUID.randomUUID() )"),
     })
     CreateUserMessage mapCreateRequestToCreateUserMessage(CreateUserDto createUserDto, String photoPath);
 }

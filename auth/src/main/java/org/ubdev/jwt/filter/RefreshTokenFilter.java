@@ -3,7 +3,6 @@ package org.ubdev.jwt.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
@@ -16,6 +15,8 @@ import org.ubdev.jwt.repository.TokenRepository;
 import java.io.IOException;
 import java.util.List;
 
+import static org.springframework.http.HttpMethod.POST;
+
 public class RefreshTokenFilter extends BaseJweFilter {
     private final TokenFactory<Token> accessTokenFactory;
     private final JwtTokenStringSerializer accessTokenStringSerializer;
@@ -24,7 +25,7 @@ public class RefreshTokenFilter extends BaseJweFilter {
     public RefreshTokenFilter(JwtDeserializer jweDeserializer, TokenRepository tokenRepository,
                               List<String> requiredAuthorities, TokenFactory<Token> accessTokenFactory,
                               JwtTokenStringSerializer accessTokenStringSerializer, ObjectMapper objectMapper) {
-        super(new AntPathRequestMatcher("/api/jwt/refresh", HttpMethod.POST.name())
+        super(new AntPathRequestMatcher("/api/v1/jwt/refresh", POST.name())
                 ,jweDeserializer, tokenRepository, requiredAuthorities);
         
         this.accessTokenFactory = accessTokenFactory;

@@ -29,7 +29,7 @@ import static org.ubdev.jwt.config.JwtConstants.ACCESS_DENIED_MESSAGE;
 @RequiredArgsConstructor
 public class RequestJwtTokensFilter extends OncePerRequestFilter {
 
-    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/jwt/tokens", POST.name());
+    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/api/v1/jwt/tokens", POST.name());
 
     private final SecurityContextRepository securityContextRepository;
     private final TokenFactory<Authentication> refreshTokenFactory;

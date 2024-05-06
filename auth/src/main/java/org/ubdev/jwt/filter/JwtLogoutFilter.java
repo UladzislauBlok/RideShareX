@@ -1,7 +1,6 @@
 package org.ubdev.jwt.filter;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
 import org.ubdev.jwt.model.Token;
@@ -9,10 +8,12 @@ import org.ubdev.jwt.repository.TokenRepository;
 
 import java.util.List;
 
+import static org.springframework.http.HttpMethod.POST;
+
 public class JwtLogoutFilter extends BaseJweFilter {
 
     public JwtLogoutFilter(JwtDeserializer jweDeserializer, TokenRepository tokenRepository, List<String> requiredAuthorities) {
-        super(new AntPathRequestMatcher("/api/jwt/logout", HttpMethod.POST.name()), 
+        super(new AntPathRequestMatcher("/api/v1/jwt/logout", POST.name()),
                 jweDeserializer, tokenRepository, requiredAuthorities);
     }
 

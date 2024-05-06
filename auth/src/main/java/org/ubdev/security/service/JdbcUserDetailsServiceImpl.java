@@ -9,7 +9,7 @@ import org.ubdev.user.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class JdbcUserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override

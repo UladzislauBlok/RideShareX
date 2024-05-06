@@ -19,6 +19,7 @@ import org.ubdev.jwt.factory.RefreshTokenFactory;
 import org.ubdev.jwt.serializer.AccessTokenJwsStringSerializer;
 import org.ubdev.jwt.serializer.RefreshTokenJweStringSerializer;
 import org.ubdev.jwt.repository.TokenRepository;
+import org.ubdev.security.configurer.HeaderAuthenticationConfigurer;
 
 @EnableWebSecurity
 @Configuration
@@ -40,9 +41,16 @@ public class SecurityConfig {
     }
 
     @Bean
+    public HeaderAuthenticationConfigurer headerAuthenticationConfigurer() {
+        return new HeaderAuthenticationConfigurer();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   JwtAuthenticationConfigurer jwtAuthenticationConfigurer) throws Exception {
+                                                   JwtAuthenticationConfigurer jwtAuthenticationConfigurer,
+                                                   HeaderAuthenticationConfigurer headerAuthenticationConfigurer) throws Exception {
         http.with(jwtAuthenticationConfigurer, Customizer.withDefaults());
+        http.with(headerAuthenticationConfigurer, Customizer.withDefaults());
 
         return http
                 .httpBasic(Customizer.withDefaults())

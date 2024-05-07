@@ -5,11 +5,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
@@ -21,6 +26,8 @@ import org.ubdev.jwt.serializer.AccessTokenJwsStringSerializer;
 import org.ubdev.jwt.serializer.RefreshTokenJweStringSerializer;
 import org.ubdev.jwt.repository.TokenRepository;
 import org.ubdev.security.configurer.HeaderAuthenticationConfigurer;
+import org.ubdev.security.service.JdbcUserDetailsServiceImpl;
+import org.ubdev.user.repository.UserRepository;
 
 @EnableWebSecurity
 @Configuration
@@ -67,7 +74,21 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationProvider authenticationProvider(UserRepository userRepository,
+                                                         PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(new JdbcUserDetailsServiceImpl(userRepository));
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return authenticationProvider;
+    }
+
+    @Bean
     public SecurityContextRepository securityContextRepository() {
         return new RequestAttributeSecurityContextRepository();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

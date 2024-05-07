@@ -1,6 +1,7 @@
 package org.ubdev.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import static org.ubdev.user.config.UserConstants.EMAIL_ALREADY_EXIST_MESSAGE;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void createUser(CreateUserDto dto, MultipartFile image) {
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistException(EMAIL_ALREADY_EXIST_MESSAGE.formatted(user.getEmail()));
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.saveUser(user);
         String photoPath = user.getId().toString() + image.getOriginalFilename();
         CreateUserMessage message = userMapper.mapCreateRequestToCreateUserMessage(dto, photoPath);

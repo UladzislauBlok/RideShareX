@@ -18,4 +18,19 @@ public class UserSqlQueries {
             INSERT INTO user_authority(user_id, authority_id) VALUES (?,\s
             (SELECT id FROM authority WHERE authority = 'ROLE_USER'))
             """;
+
+    public static final String UPDATE_USER_EMAIL_QUERY = """
+            UPDATE users SET email = ?\s
+            WHERE email = ?
+            """;
+
+    public static final String DELETE_USER_BY_EMAIL_QUERY = """
+            DELETE FROM users\s
+            WHERE email = ?
+            """;
+
+    public static final String DELETE_USER_BY_ID_QUERY = """
+            DELETE FROM users\s
+            WHERE id = ?
+            """;
 }

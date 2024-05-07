@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.ubdev.user.repository.UserSqlQueries.*;
 
@@ -41,5 +42,23 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcTemplate.update(ADD_AUTHORITY_TO_USER_QUERY, user.getId());
     }
 
+    @Override
+    public void updateEmail(String oldEmail, String newEmail) {
+        jdbcTemplate.update(UPDATE_USER_EMAIL_QUERY, newEmail, oldEmail);
+    }
 
+    @Override
+    public void updatePassword(String email, String password) {
+        jdbcTemplate.update(UPDATE_USER_EMAIL_QUERY, password, email);
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        jdbcTemplate.update(DELETE_USER_BY_EMAIL_QUERY, email);
+    }
+
+    @Override
+    public void deleteUserById(UUID id) {
+        jdbcTemplate.update(DELETE_USER_BY_ID_QUERY, id);
+    }
 }

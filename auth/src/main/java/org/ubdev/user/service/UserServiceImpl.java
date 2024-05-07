@@ -5,12 +5,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.ubdev.user.dto.CreateUserDto;
-import org.ubdev.user.dto.CreateUserMessage;
+import org.ubdev.user.dto.*;
 import org.ubdev.user.exception.EmailAlreadyExistException;
 import org.ubdev.user.mapper.UserMapper;
 import org.ubdev.user.model.User;
 import org.ubdev.user.repository.UserRepository;
+
+import java.util.UUID;
 
 import static org.ubdev.user.config.UserConstants.EMAIL_ALREADY_EXIST_MESSAGE;
 
@@ -35,5 +36,34 @@ public class UserServiceImpl implements UserService {
         CreateUserMessage message = userMapper.mapCreateRequestToCreateUserMessage(dto, photoPath);
 
         // publish message for imageMicro and UserMicro
+    }
+
+    @Override
+    public void updateEmail(UpdateEmailDto dto, String oldEmail) {
+        if (userRepository.existsByEmail(dto.email())) {
+            throw new EmailAlreadyExistException(EMAIL_ALREADY_EXIST_MESSAGE.formatted(dto.email()));
+        }
+
+        userRepository.updateEmail(oldEmail, dto.email());
+        UpdateEmailMessage message = new UpdateEmailMessage(oldEmail, dto.email());
+    }
+
+    @Override
+    public void updatePassword(UpdatePasswordDto dto, String email) {
+        userRepository.updatePassword(email, passwordEncoder.encode(dto.password()));
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        userRepository.deleteUser(email);
+
+        DeleteUserMessage message = new DeleteUserMessage(email);
+    }
+
+    @Override
+    public void deleteUserById(UUID id) {
+        userRepository.deleteUserById(id);
+
+        DeleteUserMessage message = new DeleteUserMessage(id.toString());
     }
 }

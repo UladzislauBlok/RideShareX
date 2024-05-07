@@ -75,6 +75,9 @@ public class SecurityConfig {
                         authorizeHttpRequest
                                 .requestMatchers("/actuator/health").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+                                .requestMatchers("/api/v1/users/email", "/api/v1/users/password").hasRole("USER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/users").hasRole("USER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").hasRole("MANAGER")
                                 .anyRequest().authenticated())
                 .exceptionHandling((ex) -> ex.accessDeniedHandler(accessDeniedHandler))
                 .exceptionHandling((ex) -> ex.authenticationEntryPoint(entryPoint))

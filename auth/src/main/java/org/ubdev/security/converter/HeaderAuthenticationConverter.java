@@ -15,7 +15,7 @@ public class HeaderAuthenticationConverter implements AuthenticationConverter {
         var authoritiesHeader = request.getHeader(AUTHORITIES);
 
         if (subjectHeader != null && authoritiesHeader != null) {
-            new PreAuthenticatedAuthenticationToken(subjectHeader, authoritiesHeader);
+            return new PreAuthenticatedAuthenticationToken(subjectHeader, authoritiesHeader);
         }
         return null;
     }

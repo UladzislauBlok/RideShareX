@@ -1,7 +1,11 @@
 package org.ubdev.user.exception;
 
-public class EmailAlreadyExistException extends IllegalStateException {
+import org.springframework.http.HttpStatus;
+
+public class EmailAlreadyExistException extends BaseUserException {
+    private static final HttpStatus STATUS = HttpStatus.CONFLICT;
+
     public EmailAlreadyExistException(String s) {
-        super(s);
+        super(s, STATUS);
     }
 }

@@ -14,6 +14,9 @@ public class PathConstants {
 
     );
     private static final Set<String> ACCESS_TOKEN_PATH = Set.of(
-
+            "PATCH|/api/v1/users/email",
+            "PATCH|/api/v1/users/password",
+            "DELETE|/api/v1/users",
+            "DELETE|/api/v1/users/*"
     );
 }

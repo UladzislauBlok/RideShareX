@@ -1,7 +1,11 @@
 package org.ubdev.jwt.exception;
 
-public class JweDeserializationException extends IllegalArgumentException {
+import org.springframework.http.HttpStatus;
+
+public class JweDeserializationException extends BaseJwtException {
+    private static final HttpStatus STATUS = HttpStatus.BAD_REQUEST;
+
     public JweDeserializationException(String s) {
-        super(s);
+        super(s, STATUS);
     }
 }

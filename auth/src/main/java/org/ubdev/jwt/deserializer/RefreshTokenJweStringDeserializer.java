@@ -38,8 +38,8 @@ public class RefreshTokenJweStringDeserializer implements JwtDeserializer {
                     claims.getExpiration().toInstant(),
                     TokenType.REFRESH
             ));
-        } catch (JwtException e) {
-            log.warn(e.getMessage());
+        } catch (JwtException | IllegalArgumentException e) {
+            log.debug(e.getMessage());
         }
 
         return Optional.empty();

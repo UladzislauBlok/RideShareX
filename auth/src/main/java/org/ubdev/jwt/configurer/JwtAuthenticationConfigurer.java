@@ -7,9 +7,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.ubdev.jwt.deserializer.JwtDeserializer;
+import org.ubdev.jwt.exception.handler.HandleJwtExceptionFilter;
 import org.ubdev.jwt.factory.TokenFactory;
 import org.ubdev.jwt.filter.JwtLogoutFilter;
 import org.ubdev.jwt.filter.RefreshTokenFilter;
@@ -42,10 +44,16 @@ public class JwtAuthenticationConfigurer
         var requestJwtTokensFilter = buildRequestJwtTokenFilter();
         var refreshJwtTokensFilter = buildRefreshTokenFilter();
         var jwtLogoutFilter = buildJwtLogoutFilter();
+        var handleJwtExceptionFilter = buildHandleJwtExceptionFilter();
 
         builder.addFilterAfter(requestJwtTokensFilter, ExceptionTranslationFilter.class)
                 .addFilterBefore(refreshJwtTokensFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(jwtLogoutFilter, BasicAuthenticationFilter.class);
+                .addFilterBefore(jwtLogoutFilter, BasicAuthenticationFilter.class)
+                .addFilterAfter(handleJwtExceptionFilter, LogoutFilter.class);
+    }
+
+    private HandleJwtExceptionFilter buildHandleJwtExceptionFilter() {
+        return new HandleJwtExceptionFilter(objectMapper);
     }
 
     private JwtLogoutFilter buildJwtLogoutFilter() {

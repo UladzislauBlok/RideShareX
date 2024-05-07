@@ -1,7 +1,11 @@
 package org.ubdev.jwt.exception;
 
-public class TokenExpiredException extends IllegalStateException {
+import org.springframework.http.HttpStatus;
+
+public class TokenExpiredException extends BaseJwtException {
+    private static final HttpStatus STATUS = HttpStatus.UNAUTHORIZED;
+
     public TokenExpiredException(String s) {
-        super(s);
+        super(s, STATUS);
     }
 }

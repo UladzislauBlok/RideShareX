@@ -1,4 +1,4 @@
-package org.ubdev.jwt.exception.response;
+package org.ubdev.security.response;
 
 import org.springframework.http.HttpStatus;
 

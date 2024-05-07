@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.ubdev.jwt.exception.BaseJwtException;
-import org.ubdev.jwt.exception.response.ErrorResponse;
+import org.ubdev.security.response.ErrorResponse;
 
 import java.io.IOException;
 

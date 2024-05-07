@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.ubdev.user.exception.BaseUserException;
-import org.ubdev.user.exception.response.ErrorResponse;
+import org.ubdev.security.response.ErrorResponse;
 
 import static java.lang.Thread.currentThread;
 

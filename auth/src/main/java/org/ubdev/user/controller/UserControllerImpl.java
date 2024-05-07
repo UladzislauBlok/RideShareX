@@ -38,14 +38,14 @@ public class UserControllerImpl implements UserController {
 
     @PatchMapping("/email")
     @Override
-    public ResponseEntity<Map> updateEmail(UpdateEmailDto dto, Principal principal) {
+    public ResponseEntity<Map> updateEmail(@RequestBody UpdateEmailDto dto, Principal principal) {
         userService.updateEmail(dto, principal.getName());
         return ResponseEntity.ok(Map.of("message", "OK"));
     }
 
     @PatchMapping("/password")
     @Override
-    public ResponseEntity<Map> updatePassword(UpdatePasswordDto dto, Principal principal) {
+    public ResponseEntity<Map> updatePassword(@RequestBody UpdatePasswordDto dto, Principal principal) {
         userService.updatePassword(dto, principal.getName());
         return ResponseEntity.ok(Map.of("message", "OK"));
     }

@@ -49,7 +49,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updatePassword(String email, String password) {
-        jdbcTemplate.update(UPDATE_USER_EMAIL_QUERY, password, email);
+        jdbcTemplate.update(UPDATE_USER_PASSWORD_QUERY, password, email);
     }
 
     @Override

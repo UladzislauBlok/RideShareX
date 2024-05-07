@@ -24,6 +24,11 @@ public class UserSqlQueries {
             WHERE email = ?
             """;
 
+    public static final String UPDATE_USER_PASSWORD_QUERY = """
+            UPDATE users SET password = ?\s
+            WHERE email = ?
+            """;
+
     public static final String DELETE_USER_BY_EMAIL_QUERY = """
             DELETE FROM users\s
             WHERE email = ?

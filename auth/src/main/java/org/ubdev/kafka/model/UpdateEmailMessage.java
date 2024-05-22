@@ -1,4 +1,4 @@
-package org.ubdev.user.dto;
+package org.ubdev.kafka.model;
 
 public record UpdateEmailMessage (
         String oldEmail,

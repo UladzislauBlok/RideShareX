@@ -8,17 +8,20 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>config-server</module>
+      <module>config-server</module>
       <module>netflix-eureka</module>
-    <module>user</module>
+      <module>user</module>
+      <module>api-gateway</module>
+      <module>auth</module>
   </modules>
 
   <properties>
-    <java.version>17</java.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <spring-cloud.version>2023.0.0</spring-cloud.version>
-    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+      <java.version>17</java.version>
+      <maven.compiler.source>17</maven.compiler.source>
+      <maven.compiler.target>17</maven.compiler.target>
+      <spring-cloud.version>2023.0.0</spring-cloud.version>
+      <jjwt.version>0.12.5</jjwt.version>
+      <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
   </properties>
 
   <parent>

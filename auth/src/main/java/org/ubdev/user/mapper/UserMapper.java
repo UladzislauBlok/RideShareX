@@ -4,8 +4,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.ubdev.user.dto.CreateUserDto;
-import org.ubdev.user.dto.CreateUserMessage;
+import org.ubdev.kafka.model.CreateUserMessage;
 import org.ubdev.user.model.User;
+
+import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -16,8 +18,5 @@ public interface UserMapper {
     })
     User mapCreateRequestToUser(CreateUserDto createUserDto);
 
-    @Mappings({
-            @Mapping(target = "id", expression = "java( UUID.randomUUID() )"),
-    })
-    CreateUserMessage mapCreateRequestToCreateUserMessage(CreateUserDto createUserDto, String photoPath);
+    CreateUserMessage mapCreateRequestToCreateUserMessage(CreateUserDto createUserDto, String photoPath, UUID id);
 }

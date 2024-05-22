@@ -5,7 +5,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.ubdev.user.dto.*;
+import org.ubdev.kafka.model.CreateUserMessage;
+import org.ubdev.kafka.model.DeleteUserMessage;
+import org.ubdev.kafka.model.UpdateEmailMessage;
+import org.ubdev.kafka.producer.KafkaUserMessageProducer;
+import org.ubdev.user.dto.CreateUserDto;
+import org.ubdev.user.dto.UpdateEmailDto;
+import org.ubdev.user.dto.UpdatePasswordDto;
 import org.ubdev.user.exception.EmailAlreadyExistException;
 import org.ubdev.user.mapper.UserMapper;
 import org.ubdev.user.model.User;
@@ -22,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaUserMessageProducer userMessageProducer;
 
     @Override
     public void createUser(CreateUserDto dto, MultipartFile image) {
@@ -33,8 +40,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.saveUser(user);
         String photoPath = user.getId().toString() + image.getOriginalFilename();
-        CreateUserMessage message = userMapper.mapCreateRequestToCreateUserMessage(dto, photoPath);
+        CreateUserMessage message = userMapper.mapCreateRequestToCreateUserMessage(dto, photoPath, user.getId());
 
+        userMessageProducer.sendCreateUserMessage(message);
         // publish message for imageMicro and UserMicro
     }
 
@@ -46,6 +54,8 @@ public class UserServiceImpl implements UserService {
 
         userRepository.updateEmail(oldEmail, dto.email());
         UpdateEmailMessage message = new UpdateEmailMessage(oldEmail, dto.email());
+
+        userMessageProducer.sendUpdateEmailMessage(message);
     }
 
     @Override
@@ -58,6 +68,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteUser(email);
 
         DeleteUserMessage message = new DeleteUserMessage(email);
+        userMessageProducer.sendDeleteUserMessage(message);
     }
 
     @Override
@@ -65,5 +76,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteUserById(id);
 
         DeleteUserMessage message = new DeleteUserMessage(id.toString());
+        userMessageProducer.sendDeleteUserMessage(message);
     }
 }

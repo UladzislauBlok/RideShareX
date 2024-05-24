@@ -70,7 +70,7 @@ services:
       POSTGRES_DB: user_db
       PGDATA: /data/postgres
     ports:
-      - '5431:5432'
+      - '5430:5432'
     volumes:
       - C:\postgres-container-data\user:/data/postgres
     networks:
@@ -174,6 +174,7 @@ services:
       DB_AUTH_USERNAME: ${DB_AUTH_USERNAME}
       DB_AUTH_PASSWORD: ${DB_AUTH_PASSWORD}
       SQL_URI: jdbc:postgresql://postgres-auth:5432/auth_db
+      KAFKA_URI: kafka:9092
       JWE_SECRET_KEY: ${JWE_SECRET_KEY}
       JWS_SECRET_KEY: ${JWS_SECRET_KEY}
     restart: on-failure:5
@@ -199,12 +200,17 @@ services:
         condition: service_healthy
       postgres-user:
         condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     environment:
       CONFIGURATION_SERVER_URI: http://configuration-server:8080/
       EUREKA_URI: http://netflix-eureka:8761/eureka
       DB_USERNAME_USER_MICROSERVICE: ${DB_USERNAME_USER_MICROSERVICE}
       DB_PASSWORD_USER_MICROSERVICE: ${DB_PASSWORD_USER_MICROSERVICE}
       SQL_URI: jdbc:postgresql://postgres-user:5432/user_db
+      KAFKA_URI: kafka:9092
     restart: on-failure:5
     networks:
       - ridesharex-net

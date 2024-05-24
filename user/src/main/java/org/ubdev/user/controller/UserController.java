@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.ubdev.user.dto.CreateUserDto;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
 import org.ubdev.user.service.UserService;
@@ -31,11 +30,6 @@ public class UserController {
     public ResponseEntity<Page<UserDto>> getUsers(@RequestParam int page,
                                                   @RequestParam int size) {
         return ResponseEntity.ok(userService.getAll(page, size));
-    }
-
-    @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto dto) {
-        return new ResponseEntity<>(userService.create(dto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

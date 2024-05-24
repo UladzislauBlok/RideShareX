@@ -21,12 +21,13 @@ public class UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getById(id));
     }
-    @GetMapping()
+
+    @GetMapping
     public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<Page<UserDto>> getUsers(@RequestParam int page,
                                                   @RequestParam int size) {
         return ResponseEntity.ok(userService.getAll(page, size));

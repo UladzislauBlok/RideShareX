@@ -44,7 +44,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic kRequests() {
+    public NewTopic createUserTopic() {
         return TopicBuilder.name(topicName)
                 .partitions(topicPartitions)
                 .replicas(topicReplicas)

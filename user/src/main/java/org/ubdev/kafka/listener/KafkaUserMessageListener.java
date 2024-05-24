@@ -45,7 +45,7 @@ public class KafkaUserMessageListener {
     }
 
     private void handleDeleteUserMessage(DeleteUserMessage message) {
-        userService.delete(message);
+        userService.deleteByMessage(message);
     }
 
     private void handleUpdateEmailMessage(UpdateEmailMessage message) {

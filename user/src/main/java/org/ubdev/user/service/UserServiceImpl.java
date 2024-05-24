@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.ubdev.user.dto.CreateUserDto;
+import org.ubdev.kafka.model.CreateUserMessage;
+import org.ubdev.kafka.model.DeleteUserMessage;
+import org.ubdev.kafka.model.UpdateEmailMessage;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
-import org.ubdev.user.exception.exceptions.DuplicateEmailException;
 import org.ubdev.user.exception.exceptions.UserNotFoundException;
 import org.ubdev.user.mapper.UserMapper;
 import org.ubdev.user.model.User;
@@ -42,19 +43,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto create(CreateUserDto dto) {
-        if (userRepository.existsByEmail(dto.email()))
-            throw new DuplicateEmailException();
-
-        User newUser = userMapper.createNewUserWithoutId(dto);
-        // TODO image save logic
-        newUser = userRepository.save(newUser);
-        return userMapper.userToUserDto(newUser);
+    public void create(CreateUserMessage message) {
+        User user = userMapper.mapCreateUserMessageToUser(message);
+        userRepository.save(user);
     }
 
     @Override
     public void deleteById(UUID id) {
-        if (userRepository.existsById(id))
+        if (!userRepository.existsById(id))
             throw new UserNotFoundException();
         userRepository.deleteById(id);
     }
@@ -63,9 +59,19 @@ public class UserServiceImpl implements UserService {
     public UserDto update(UserUpdateDto dto) {
         User user = userRepository.findById(dto.id())
                 .orElseThrow(UserNotFoundException::new);
-        userMapper.updateUserFromUserDto(dto, user);
+        userMapper.updateUserFromDto(dto, user);
         // TODO update image logic
         userRepository.save(user);
         return userMapper.userToUserDto(user);
+    }
+
+    @Override
+    public void deleteByMessage(DeleteUserMessage message) {
+        userRepository.deleteByEmail(message.email());
+    }
+
+    @Override
+    public void updateEmail(UpdateEmailMessage message) {
+        userRepository.updateEmail(message.oldEmail(), message.newEmail());
     }
 }

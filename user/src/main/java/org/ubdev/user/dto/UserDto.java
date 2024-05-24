@@ -15,7 +15,7 @@ public record UserDto (
         LocalDate registrationDate,
 
         @JsonProperty("photo_url")
-        String photoUrl,
+        String photoPath,
 
         @JsonProperty("phone_number")
         String phoneNumber,

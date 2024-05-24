@@ -26,6 +26,7 @@ public class Document {
     private User user;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DocumentType type;
 
     @Column(nullable = false, unique = true)

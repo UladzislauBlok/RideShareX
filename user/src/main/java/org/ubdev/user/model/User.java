@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
@@ -21,7 +22,6 @@ import java.util.UUID;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
@@ -33,14 +33,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
-
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
-    @Column(name = "photo")
-    private String photoUrl;
+    @Column(name = "photo_path")
+    private String photoPath;
 
     @Column(name = "phone_number")
     private String phoneNumber;

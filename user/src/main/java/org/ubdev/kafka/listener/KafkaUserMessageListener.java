@@ -7,11 +7,14 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.ubdev.kafka.model.CreateUserMessage;
 import org.ubdev.kafka.model.DeleteUserMessage;
+import org.ubdev.kafka.model.KafkaUserMessage;
 import org.ubdev.kafka.model.UpdateEmailMessage;
 import org.ubdev.user.service.UserService;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import static org.ubdev.kafka.config.KafkaConstants.UNSUPPORTED_KAFKA_MESSAGE_TYPE;
 
@@ -21,23 +24,27 @@ import static org.ubdev.kafka.config.KafkaConstants.UNSUPPORTED_KAFKA_MESSAGE_TY
 public class KafkaUserMessageListener {
     private final UserService userService;
     private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final Map<Class<? extends KafkaUserMessage>, Consumer<Object>> handlers = Map.of(
+            CreateUserMessage.class, message -> handleCreateUserMessage((CreateUserMessage) message),
+            DeleteUserMessage.class, message -> handleDeleteUserMessage((DeleteUserMessage) message),
+            UpdateEmailMessage.class, message -> handleUpdateEmailMessage((UpdateEmailMessage) message)
+    );
 
-    @KafkaListener(topics = "${kafka.topics.user-topic.name}", groupId = "${kafka.topics.user-topic.group-id}")
+
+    @KafkaListener(topics = "${kafka.topics.user-topic.name}", groupId = "${kafka.topics.user-topic.consumer-group-id}")
     public void listen(ConsumerRecord<String, Object> record) {
-        Object input = record.value();
-        executorService.submit(() -> processMessage(input));
+        Object message = record.value();
+        executorService.submit(() -> processMessage(message));
     }
 
-    private void processMessage(Object input) {
-        if (input instanceof CreateUserMessage message) {
-            handleCreateUserMessage(message);
-        } else if (input instanceof DeleteUserMessage message) {
-            handleDeleteUserMessage(message);
-        } else if (input instanceof UpdateEmailMessage message) {
-            handleUpdateEmailMessage(message);
-        }
+    private void processMessage(Object message) {
+        Consumer<Object> handler = handlers.get(message.getClass());
 
-        log.error(UNSUPPORTED_KAFKA_MESSAGE_TYPE.formatted(input));
+        if (handler != null) {
+            handler.accept(message);
+        } else {
+            log.error(UNSUPPORTED_KAFKA_MESSAGE_TYPE.formatted(message));
+        }
     }
 
     private void handleCreateUserMessage(CreateUserMessage message) {

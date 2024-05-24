@@ -22,5 +22,5 @@ public record CreateUserMessage (
         Preference conversationPreference,
 
         @JsonProperty("music_preference")
-        Preference musicPreference) {
+        Preference musicPreference) implements KafkaUserMessage {
 }

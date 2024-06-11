@@ -14,23 +14,22 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.ubdev.kafka.config.KafkaConstants.DEFAULT_GROUP_ID;
+
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${kafka.topics.user-topic.consumer-group-id}")
-    private String groupId;
-
-    @Value("${kafka.topics.user-topic.consumer-thread-num:3}")
+    @Value("${kafka.consumer.consumer-thread-num:3}")
     private Integer threadNum;
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, DEFAULT_GROUP_ID);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");

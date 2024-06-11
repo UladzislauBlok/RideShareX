@@ -1,7 +1,7 @@
 package org.ubdev.user.mapper;
 
 import org.mapstruct.*;
-import org.ubdev.kafka.model.CreateUserMessage;
+import org.ubdev.kafka.model.user.CreateUserMessage;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
 import org.ubdev.user.model.User;

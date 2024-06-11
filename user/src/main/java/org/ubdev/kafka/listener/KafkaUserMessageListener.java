@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.ubdev.kafka.model.CreateUserMessage;
-import org.ubdev.kafka.model.DeleteUserMessage;
-import org.ubdev.kafka.model.KafkaUserMessage;
-import org.ubdev.kafka.model.UpdateEmailMessage;
+import org.ubdev.kafka.model.user.CreateUserMessage;
+import org.ubdev.kafka.model.user.DeleteUserMessage;
+import org.ubdev.kafka.model.user.KafkaUserMessage;
+import org.ubdev.kafka.model.user.UpdateEmailMessage;
 import org.ubdev.user.service.UserService;
 
 import java.util.Map;
@@ -31,7 +31,7 @@ public class KafkaUserMessageListener {
     );
 
 
-    @KafkaListener(topics = "${kafka.topics.user-topic.name}", groupId = "${kafka.topics.user-topic.consumer-group-id}")
+    @KafkaListener(topics = "${kafka.consumer.user-topic.name}", groupId = "${kafka.consumer.user-topic.consumer-group-id}")
     public void listen(ConsumerRecord<String, Object> record) {
         Object message = record.value();
         executorService.submit(() -> processMessage(message));

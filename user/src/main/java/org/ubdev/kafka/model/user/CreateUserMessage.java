@@ -1,4 +1,4 @@
-package org.ubdev.kafka.model;
+package org.ubdev.kafka.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ubdev.user.model.Preference;

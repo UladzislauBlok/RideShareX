@@ -1,9 +1,9 @@
 package org.ubdev.user.service;
 
 import org.springframework.data.domain.Page;
-import org.ubdev.kafka.model.CreateUserMessage;
-import org.ubdev.kafka.model.DeleteUserMessage;
-import org.ubdev.kafka.model.UpdateEmailMessage;
+import org.ubdev.kafka.model.user.CreateUserMessage;
+import org.ubdev.kafka.model.user.DeleteUserMessage;
+import org.ubdev.kafka.model.user.UpdateEmailMessage;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
 

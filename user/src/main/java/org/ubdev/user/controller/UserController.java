@@ -22,11 +22,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.getByEmail(email));
-    }
-
     @GetMapping("/all")
     public ResponseEntity<Page<UserDto>> getUsers(@RequestParam int page,
                                                   @RequestParam int size) {

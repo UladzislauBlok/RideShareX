@@ -11,7 +11,6 @@ import java.util.UUID;
 
 public interface UserService {
     UserDto getById(UUID id);
-    UserDto getByEmail(String email);
     Page<UserDto> getAll(int pageNum, int pageSize);
     void create(CreateUserMessage message);
     void deleteById(UUID id);

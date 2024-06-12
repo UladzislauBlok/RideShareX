@@ -22,11 +22,11 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rated_user_id", nullable = false)
     private User ratedUser;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rating_user_id", nullable = false)
     private User ratingUser;
 

@@ -50,7 +50,6 @@ public class DocumentByUserRepositoryImpl implements DocumentByUserRepository {
     private RowMapper<DocumentDto> getDocumentDtoMapper() {
         return (rs, rowNum) -> new DocumentDto(
                 rs.getObject("id", UUID.class),
-                rs.getObject("user_id", UUID.class),
                 rs.getObject("type", DocumentType.class),
                 rs.getString("number"),
                 rs.getDate("creation_date").toLocalDate());

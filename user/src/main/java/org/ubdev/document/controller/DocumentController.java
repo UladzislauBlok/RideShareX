@@ -1,7 +1,6 @@
 package org.ubdev.document.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +31,6 @@ public class DocumentController {
     @GetMapping
     public ResponseEntity<List<DocumentDto>> getDocumentByUser(Principal principal) {
         return ResponseEntity.ok(documentService.getDocumentsByUser(principal.getName()));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<Page<DocumentDto>> getUsers(@RequestParam int page,
-                                                  @RequestParam int size) {
-        return ResponseEntity.ok(documentService.getAll(page, size));
     }
 
     @DeleteMapping("/{id}")

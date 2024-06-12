@@ -1,8 +1,6 @@
 package org.ubdev.document.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.ubdev.document.dto.DocumentCreateDto;
 import org.ubdev.document.dto.DocumentDto;
@@ -39,12 +37,6 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<DocumentDto> getDocumentsByUser(String userEmail) {
         return documentRepository.getDocumentsByUserEmail(userEmail);
-    }
-
-    @Override
-    public Page<DocumentDto> getAll(int page, int size) {
-        return documentRepository.findAll(PageRequest.of(page, size))
-                .map(documentMapper::mapToDto);
     }
 
     @Override

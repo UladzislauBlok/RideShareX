@@ -1,6 +1,5 @@
 package org.ubdev.document.service;
 
-import org.springframework.data.domain.Page;
 import org.ubdev.document.dto.DocumentCreateDto;
 import org.ubdev.document.dto.DocumentDto;
 
@@ -11,7 +10,6 @@ public interface DocumentService {
     DocumentDto getDocumentById(UUID id);
     List<DocumentDto> getDocumentsByUserId(UUID userId);
     List<DocumentDto> getDocumentsByUser(String userEmail);
-    Page<DocumentDto> getAll(int page, int size);
     DocumentDto createDocument(DocumentCreateDto dto, String userEmail);
     void deleteDocumentById(UUID id);
 }

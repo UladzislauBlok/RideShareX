@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public record DocumentDto (
     UUID id,
-    UUID user_id,
     DocumentType type,
     String number,
     LocalDate creationDate

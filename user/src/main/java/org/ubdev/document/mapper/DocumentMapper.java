@@ -9,8 +9,6 @@ import org.ubdev.document.model.Document;
 
 @Mapper(componentModel = "spring")
 public interface DocumentMapper {
-
-    @Mapping(target = "user_id", source = "document.user.id")
     DocumentDto mapToDto(Document document);
 
     @Mappings({

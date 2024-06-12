@@ -1,10 +1,8 @@
 package org.ubdev.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.ubdev.car.model.Car;
 import org.ubdev.document.model.Document;
 import org.ubdev.rating.model.Rating;
@@ -18,6 +16,8 @@ import java.util.UUID;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "email")
+@ToString(exclude = {"documents", "cars", "ratings"})
 @Data
 @Builder
 public class User {
@@ -55,11 +55,14 @@ public class User {
     private Preference musicPreference;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Document> documents;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Car> cars;
 
     @OneToMany(mappedBy = "ratedUser")
+    @JsonIgnore
     private List<Rating> ratings;
 }

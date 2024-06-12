@@ -10,7 +10,6 @@ public record UserDto (
         UUID id,
         String name,
         String surname,
-        String email,
         @JsonProperty("registration_date")
         LocalDate registrationDate,
 

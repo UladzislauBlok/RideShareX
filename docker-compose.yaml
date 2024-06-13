@@ -77,6 +77,20 @@ services:
       - ridesharex-net
     restart: unless-stopped
 
+  cache-redis:
+    image: redis:latest
+    container_name: cache-redis
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - '6379:6379'
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
   configuration-server:
     build: config-server
     image: config-server:1.0.0
@@ -204,6 +218,8 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      cache-redis:
+        condition: service_healthy
     environment:
       CONFIGURATION_SERVER_URI: http://configuration-server:8080/
       EUREKA_URI: http://netflix-eureka:8761/eureka
@@ -211,6 +227,8 @@ services:
       DB_PASSWORD_USER_MICROSERVICE: ${DB_PASSWORD_USER_MICROSERVICE}
       SQL_URI: jdbc:postgresql://postgres-user:5432/user_db
       KAFKA_URI: kafka:9092
+      REDIS_URI: cache-redis
+      REDIS_PORT: 6379
     restart: on-failure:5
     networks:
       - ridesharex-net

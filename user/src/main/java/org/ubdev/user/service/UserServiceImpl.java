@@ -31,6 +31,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        return userMapper.userToUserDto(user);
+    }
+
+    @Override
     public Page<UserDto> getAll(int pageNum, int pageSize) {
         return userRepository.findAll(PageRequest.of(pageNum, pageSize))
                 .map(userMapper::userToUserDto);
@@ -51,13 +59,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(UserUpdateDto dto) {
-        User user = userRepository.findById(dto.id())
+    public UserDto update(UserUpdateDto dto, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
         userMapper.updateUserFromDto(dto, user);
         // TODO update image logic
         userRepository.save(user);
-        cacheService.invalidateUserById(dto.id());
+        cacheService.invalidateUserById(user.getId());
         return userMapper.userToUserDto(user);
     }
 

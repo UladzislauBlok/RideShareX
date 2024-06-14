@@ -34,12 +34,12 @@ public class DocumentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteDocumentById(@PathVariable UUID id) {
         documentService.deleteDocumentById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
+    @PostMapping
     public ResponseEntity<?> createDocument(@RequestBody DocumentCreateDto dto, Principal principal) {
         return ResponseEntity.ok(documentService.createDocument(dto, principal.getName()));
     }

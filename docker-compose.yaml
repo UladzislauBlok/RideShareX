@@ -21,6 +21,97 @@ services:
       - ridesharex-net
     restart: unless-stopped
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 9092 || exit 1" ]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    ports:
+      - 9092:9092
+      - 29092:29092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
+  postgres-auth:
+    image: postgres:latest
+    container_name: postgres-auth
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_AUTH_USERNAME} -d auth_db" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${DB_AUTH_USERNAME}
+      POSTGRES_PASSWORD: ${DB_AUTH_PASSWORD}
+      POSTGRES_DB: auth_db
+      PGDATA: /data/postgres
+    ports:
+      - '5431:5432'
+    volumes:
+      - C:\rade-share-x-data\auth:/data/postgres
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
+  postgres-user:
+    image: postgres:latest
+    container_name: postgres-user
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_USER_MICROSERVICE} -d user_db" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${DB_USERNAME_USER_MICROSERVICE}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_USER_MICROSERVICE}
+      POSTGRES_DB: user_db
+      PGDATA: /data/postgres
+    ports:
+      - '5430:5432'
+    volumes:
+      - C:\postgres-container-data\user:/data/postgres
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
+  cache-redis:
+    image: redis:latest
+    container_name: cache-redis
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - '6379:6379'
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
   configuration-server:
     build: config-server
     image: config-server:1.0.0
@@ -86,6 +177,108 @@ services:
       DB_USERNAME_RIDE_MICROSERVICE: ${DB_USERNAME_RIDE_MICROSERVICE}
       DB_PASSWORD_RIDE_MICROSERVICE: ${DB_PASSWORD_RIDE_MICROSERVICE}
       SQL_URI: jdbc:postgresql://postgres-ride:5432/ride_db
+    restart: on-failure:5
+    networks:
+      - ridesharex-net
+    mem_limit: 256m
+
+  api-gateway:
+    build: api-gateway
+    image: api-gateway:1.0.0
+    container_name: api-gateway
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+    ports:
+      - "8080:8080"
+    depends_on:
+      configuration-server:
+        condition: service_healthy
+      netflix-eureka:
+        condition: service_healthy
+    environment:
+      CONFIGURATION_SERVER_URI: http://configuration-server:8080/
+      EUREKA_URI: http://netflix-eureka:8761/eureka
+      DB_AUTH_USERNAME: ${DB_AUTH_USERNAME}
+      DB_AUTH_PASSWORD: ${DB_AUTH_PASSWORD}
+      JWS_SECRET_KEY: ${JWS_SECRET_KEY}
+      SQL_URI: jdbc:postgresql://postgres-auth:5432/auth_db
+    restart: on-failure:5
+    networks:
+      - ridesharex-net
+    mem_limit: 128m
+
+  auth:
+    build: auth
+    image: auth:1.0.0
+    container_name: auth
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+      configuration-server:
+        condition: service_healthy
+      netflix-eureka:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      CONFIGURATION_SERVER_URI: http://configuration-server:8080/
+      EUREKA_URI: http://netflix-eureka:8761/eureka
+      DB_AUTH_USERNAME: ${DB_AUTH_USERNAME}
+      DB_AUTH_PASSWORD: ${DB_AUTH_PASSWORD}
+      SQL_URI: jdbc:postgresql://postgres-auth:5432/auth_db
+      KAFKA_URI: kafka:9092
+      JWE_SECRET_KEY: ${JWE_SECRET_KEY}
+      JWS_SECRET_KEY: ${JWS_SECRET_KEY}
+    restart: on-failure:5
+    networks:
+      - ridesharex-net
+    mem_limit: 128m
+
+  user:
+    build: user
+    image: user:1.0.0
+    container_name: user
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+    ports:
+      - "8886:8080"
+    depends_on:
+      configuration-server:
+        condition: service_healthy
+      netflix-eureka:
+        condition: service_healthy
+      postgres-user:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      cache-redis:
+        condition: service_healthy
+    environment:
+      CONFIGURATION_SERVER_URI: http://configuration-server:8080/
+      EUREKA_URI: http://netflix-eureka:8761/eureka
+      DB_USERNAME_USER_MICROSERVICE: ${DB_USERNAME_USER_MICROSERVICE}
+      DB_PASSWORD_USER_MICROSERVICE: ${DB_PASSWORD_USER_MICROSERVICE}
+      SQL_URI: jdbc:postgresql://postgres-user:5432/user_db
+      KAFKA_URI: kafka:9092
+      REDIS_URI: cache-redis
+      REDIS_PORT: 6379
     restart: on-failure:5
     networks:
       - ridesharex-net

@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface DocumentService {
     DocumentDto getDocumentById(UUID id);
     List<DocumentDto> getDocumentsByUserId(UUID userId);
-    List<DocumentDto> getDocumentsByUser(String userEmail);
+    List<DocumentDto> getDocumentsByCurrentUser(String userEmail);
     DocumentDto createDocument(DocumentCreateDto dto, String userEmail);
     void deleteDocumentById(UUID id);
 }

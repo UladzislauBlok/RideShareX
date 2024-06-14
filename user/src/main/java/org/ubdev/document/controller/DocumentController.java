@@ -29,8 +29,8 @@ public class DocumentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DocumentDto>> getDocumentByUser(Principal principal) {
-        return ResponseEntity.ok(documentService.getDocumentsByUser(principal.getName()));
+    public ResponseEntity<List<DocumentDto>> getDocumentByCurrentUser(Principal principal) {
+        return ResponseEntity.ok(documentService.getDocumentsByCurrentUser(principal.getName()));
     }
 
     @DeleteMapping("/{id}")

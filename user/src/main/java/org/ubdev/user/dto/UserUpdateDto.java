@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.web.multipart.MultipartFile;
 import org.ubdev.user.model.Preference;
 
-import java.util.UUID;
-
 public record UserUpdateDto (
-        UUID id,
         String name,
         String surname,
 

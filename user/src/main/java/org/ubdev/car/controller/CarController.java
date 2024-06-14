@@ -30,7 +30,7 @@ public class CarController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<CarDto>> getRatingsByUserEmail(Principal principal) {
+    public ResponseEntity<List<CarDto>> getCarsByCurrentUser(Principal principal) {
         return ResponseEntity.ok(carService.getAllByCurrentUser(principal.getName()));
     }
 

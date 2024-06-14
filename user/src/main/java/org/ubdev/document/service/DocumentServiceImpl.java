@@ -36,7 +36,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<DocumentDto> getDocumentsByUser(String userEmail) {
-        return documentRepository.getDocumentsByUserEmail(userEmail);
+        return documentRepository.findAllDocumentsByUserEmail(userEmail);
     }
 
     @Override

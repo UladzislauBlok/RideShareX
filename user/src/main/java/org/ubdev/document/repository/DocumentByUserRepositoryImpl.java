@@ -13,15 +13,16 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class DocumentByUserRepositoryImpl implements DocumentByUserRepository {
-    private static final String SAVE_DOCUMENT_WITH_USER_ID = """
+    private static final String SAVE_DOCUMENT_WITH_USER_EMAIL = """
             INSERT INTO documents(id, user_id, type, number, creation_date)
-            VALUES (:id, (SELECT id FROM users WHERE email = :email), :type, :number, :creationDate)
-            RETURNING id, user_id, type, number, creation_date
+            VALUES (:id, (SELECT id FROM users WHERE email = :email), :type, :number, :creation_date)
+            RETURNING id, type, number, creation_date
             """;
 
     private static final String FIND_ALL_BY_USER_EMAIL = """
-            SELECT id, user_id, type, number, creation_date FROM documents
-            where user_id = (SELECT id FROM users WHERE email = :email)
+            SELECT d.id, d.type, d.number, d.creation_date FROM documents d
+            JOIN users u ON d.user_id = u.id
+            WHERE u.email = :email;
             """;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -34,13 +35,13 @@ public class DocumentByUserRepositoryImpl implements DocumentByUserRepository {
                 .addValue("email", userEmail)
                 .addValue("type", document.getType())
                 .addValue("number", document.getNumber())
-                .addValue("creationDate", document.getCreationDate());
+                .addValue("creation_date", document.getCreationDate());
 
-        return jdbcTemplate.queryForObject(SAVE_DOCUMENT_WITH_USER_ID, params, getDocumentDtoMapper());
+        return jdbcTemplate.queryForObject(SAVE_DOCUMENT_WITH_USER_EMAIL, params, getDocumentDtoMapper());
     }
 
     @Override
-    public List<DocumentDto> getDocumentsByUserEmail(String userEmail) {
+    public List<DocumentDto> findAllDocumentsByUserEmail(String userEmail) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("email", userEmail);
 

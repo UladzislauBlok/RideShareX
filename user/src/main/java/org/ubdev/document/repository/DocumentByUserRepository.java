@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface DocumentByUserRepository {
     DocumentDto saveDocumentWithUserEmail(Document document, String userEmail);
-    List<DocumentDto> getDocumentsByUserEmail(String userEmail);
+    List<DocumentDto> findAllDocumentsByUserEmail(String userEmail);
 }

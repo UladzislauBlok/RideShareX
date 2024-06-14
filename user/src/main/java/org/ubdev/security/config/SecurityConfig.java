@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,6 +39,20 @@ public class SecurityConfig {
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeHttpRequest ->
                         authorizeHttpRequest
+                                .requestMatchers("/actuator/health").permitAll()
+                                .requestMatchers("/api/v1/users/all").hasRole("MANAGER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").hasRole("MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/users/{id}").hasRole("USER")
+                                .requestMatchers("/api/v1/users").hasRole("USER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/ratings/{id}").hasRole("MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/ratings/{id}").hasRole("USER")
+                                .requestMatchers("/api/v1/ratings").hasRole("USER")
+                                .requestMatchers("/api/v1/documents/{id}").hasRole("MANAGER")
+                                .requestMatchers("/api/v1/documents/user/{id}").hasRole("MANAGER")
+                                .requestMatchers("/api/v1/documents").hasRole("USER")
+                                .requestMatchers("/api/v1/cars/user/{id}").hasRole("MANAGER")
+                                .requestMatchers("/api/v1/cars/{id}").hasRole("MANAGER")
+                                .requestMatchers("/api/v1/cars").hasRole("USER")
                                 .anyRequest().authenticated())
                 .exceptionHandling((ex) -> ex.accessDeniedHandler(accessDeniedHandler))
                 .exceptionHandling((ex) -> ex.authenticationEntryPoint(entryPoint))

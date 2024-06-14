@@ -23,9 +23,9 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getDocumentById(id));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<DocumentDto>> getDocumentByUserId(@PathVariable UUID userId) {
-        return ResponseEntity.ok(documentService.getDocumentsByUserId(userId));
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<DocumentDto>> getDocumentByUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(documentService.getDocumentsByUserId(id));
     }
 
     @GetMapping

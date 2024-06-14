@@ -24,7 +24,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.CREATED).body(carDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<List<CarDto>> getCarsByUserId(@PathVariable("id") UUID userId) {
         return ResponseEntity.ok(carService.getAllByUserId(userId));
     }
@@ -35,7 +35,7 @@ public class CarController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRating(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> deleteCar(@PathVariable("id") UUID id) {
         carService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

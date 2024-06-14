@@ -2,7 +2,6 @@ package org.ubdev.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ubdev.user.dto.UserDto;
@@ -32,12 +31,6 @@ public class UserController {
     public ResponseEntity<Page<UserDto>> getUsers(@RequestParam int page,
                                                   @RequestParam int size) {
         return ResponseEntity.ok(userService.getAll(page, size));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable UUID id) {
-        userService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping

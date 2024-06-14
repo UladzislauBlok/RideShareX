@@ -51,14 +51,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(UUID id) {
-        if (!userRepository.existsById(id))
-            throw new UserNotFoundException();
-        userRepository.deleteById(id);
-        cacheService.invalidateUserById(id);
-    }
-
-    @Override
     public UserDto update(UserUpdateDto dto, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);

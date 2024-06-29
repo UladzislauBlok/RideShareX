@@ -18,11 +18,12 @@ CREATE TABLE IF NOT EXISTS city (
 CREATE TABLE IF NOT EXISTS trip (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     departure_city_code CHAR(3) REFERENCES city(code) NOT NULL ,
-    destination_city_code CHAR(3) REFERENCES city(code) NOT NULL ,
+    arrival_city_code CHAR(3) REFERENCES city(code) NOT NULL ,
     departure_time TIMESTAMP NOT NULL ,
     arrival_time TIMESTAMP NOT NULL ,
     fare DECIMAL(10,2) NOT NULL ,
-    status VARCHAR(32) NOT NULL
+    status VARCHAR(32) NOT NULL ,
+    max_passenger_capacity INT NOT NULL
 );
 
 --changeset ublok:4

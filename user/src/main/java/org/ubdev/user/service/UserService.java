@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public interface UserService {
     UserDto getById(UUID id);
+    UserDto getCurrentUser(String email);
     Page<UserDto> getAll(int pageNum, int pageSize);
     void create(CreateUserMessage message);
-    void deleteById(UUID id);
-    UserDto update(UserUpdateDto dto);
+    UserDto update(UserUpdateDto dto, String email);
     void deleteByMessage(DeleteUserMessage message);
     void updateEmail(UpdateEmailMessage message);
 }

@@ -24,18 +24,18 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.CREATED).body(carDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<List<CarDto>> getCarsByUserId(@PathVariable("id") UUID userId) {
         return ResponseEntity.ok(carService.getAllByUserId(userId));
     }
 
     @GetMapping()
-    public ResponseEntity<List<CarDto>> getRatingsByUserEmail(Principal principal) {
+    public ResponseEntity<List<CarDto>> getCarsByCurrentUser(Principal principal) {
         return ResponseEntity.ok(carService.getAllByCurrentUser(principal.getName()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRating(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> deleteCar(@PathVariable("id") UUID id) {
         carService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

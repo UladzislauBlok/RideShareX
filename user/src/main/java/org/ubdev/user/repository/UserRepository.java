@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.ubdev.user.model.User;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -19,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value = "SELECT u.id FROM User u WHERE u.email = :email")
     UUID findIdByEmail(@Param("email") String email);
+
+    Optional<User> findByEmail(String email);
 }

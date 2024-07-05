@@ -23,23 +23,23 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getDocumentById(id));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<DocumentDto>> getDocumentByUserId(@PathVariable UUID userId) {
-        return ResponseEntity.ok(documentService.getDocumentsByUserId(userId));
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<DocumentDto>> getDocumentByUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(documentService.getDocumentsByUserId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<DocumentDto>> getDocumentByUser(Principal principal) {
-        return ResponseEntity.ok(documentService.getDocumentsByUser(principal.getName()));
+    public ResponseEntity<List<DocumentDto>> getDocumentByCurrentUser(Principal principal) {
+        return ResponseEntity.ok(documentService.getDocumentsByCurrentUser(principal.getName()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteDocumentById(@PathVariable UUID id) {
         documentService.deleteDocumentById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
+    @PostMapping
     public ResponseEntity<?> createDocument(@RequestBody DocumentCreateDto dto, Principal principal) {
         return ResponseEntity.ok(documentService.createDocument(dto, principal.getName()));
     }

@@ -19,7 +19,5 @@ public class City {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "country", nullable = false)
-    private Country country;
+    private String country;
 }

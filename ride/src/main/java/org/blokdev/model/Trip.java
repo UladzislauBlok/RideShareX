@@ -8,7 +8,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -30,13 +29,9 @@ public class Trip {
     @Id
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "departure_city_code", nullable = false)
-    private City departureCity;
+    private String departureCity;
 
-    @ManyToOne
-    @JoinColumn(name = "arrival_city_code", nullable = false)
-    private City arrivalCity;
+    private String arrivalCity;
 
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;

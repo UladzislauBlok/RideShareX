@@ -1,7 +1,7 @@
 package org.blokdev.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
-import org.blokdev.kafka.model.AcceptUserMessage;
+import org.blokdev.kafka.model.JoinTripMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ public class TripMessageProducer {
     @Value("${kafka.producer.trip-topic.name}")
     private String topicName;
 
-    public void sendAcceptUserMessage(AcceptUserMessage message) {
+    public void sendJoinTripMessage(JoinTripMessage message) {
         kafkaTemplate.send(topicName, message);
     }
 }

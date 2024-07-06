@@ -1,6 +1,8 @@
 package org.ubdev.jwt.config;
 
 public class JwtConstants {
+    private JwtConstants() {}
+
     public static final Long RefreshTokenTtlInDays = 1L;
     public static final Integer AccessTokenTtlInMinutes = 5;
     public static final String AUTHORITIES = "authorities";

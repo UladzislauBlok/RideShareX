@@ -52,7 +52,10 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UUID> getUserIdByEmail(@PathVariable String email) {
+    public ResponseEntity<UUID> getUserIdByEmail(@PathVariable String email,
+                                                 @RequestHeader HttpHeaders headers) {
+        if (!headers.containsKey(SYSTEM_MESSAGE_HEADER))
+            throw new AccessDeniedException(SYSTEM_HEADER_ERROR_MESSAGE);
         return ResponseEntity.ok(userService.getIdByEmail(email));
     }
 

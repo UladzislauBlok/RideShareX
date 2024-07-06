@@ -7,9 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface TripMapper {

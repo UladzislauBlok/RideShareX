@@ -12,5 +12,5 @@ public interface TripService {
     Page<TripDto> getTripsByRouteAndTime(String departureCity,String arrivalCity,
                                          LocalDateTime departureTime, int pageNum, int pageSize);
     void deleteTrip(UUID id);
-
+    void requestJoinTrip(UUID tripId, String userEmail);
 }

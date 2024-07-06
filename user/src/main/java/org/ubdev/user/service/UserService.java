@@ -15,6 +15,7 @@ public interface UserService {
     UserDto getUserByEmail(String email);
     Page<UserDto> getAll(int pageNum, int pageSize);
     JoinTripRequestData getJoinTripRequestData(String email, UUID ownerId);
+    UUID getIdByEmail(String email);
     void create(CreateUserMessage message);
     UserDto update(UserUpdateDto dto, String email);
     void deleteByMessage(DeleteUserMessage message);

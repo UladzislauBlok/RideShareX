@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UUID getIdByEmail(String email) {
+        return userRepository.findIdByEmail(email);
+    }
+
+    @Override
     public void create(CreateUserMessage message) {
         User user = userMapper.mapCreateUserMessageToUser(message);
         userRepository.save(user);

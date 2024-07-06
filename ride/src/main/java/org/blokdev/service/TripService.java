@@ -1,6 +1,7 @@
 package org.blokdev.service;
 
 import org.blokdev.dto.CreateTripDto;
+import org.blokdev.dto.JoinTripDecisionDto;
 import org.blokdev.dto.TripDto;
 import org.springframework.data.domain.Page;
 
@@ -13,4 +14,6 @@ public interface TripService {
                                          LocalDateTime departureTime, int pageNum, int pageSize);
     void deleteTrip(UUID id);
     void requestJoinTrip(UUID tripId, String userEmail);
+    void processJoinTripDecision(JoinTripDecisionDto dto, String ownerEmail);
+
 }

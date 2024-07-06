@@ -2,7 +2,9 @@ package org.blokdev.service;
 
 import lombok.RequiredArgsConstructor;
 import org.blokdev.dto.CreateTripDto;
+import org.blokdev.dto.JoinTripDecisionDto;
 import org.blokdev.dto.TripDto;
+import org.blokdev.exception.AttemptNotFoundException;
 import org.blokdev.exception.MaxPassengerCapacityReachedException;
 import org.blokdev.exception.TripNotFoundException;
 import org.blokdev.http.client.UserFeignClient;
@@ -18,6 +20,7 @@ import org.blokdev.repository.TripRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.blokdev.constant.TripServiceConstants.ACCESS_DENIED_TRIP_EXCEPTION_MASSAGE;
 
 @Service
 @Transactional
@@ -102,5 +107,39 @@ public class TripServiceImpl implements TripService {
                 );
 
         messageProducer.sendJoinTripMessage(message);
+    }
+
+    @Override
+    public void processJoinTripDecision(JoinTripDecisionDto dto, String ownerEmail) {
+        JoinTripAttempt attempt = joinTripRepository.findById(dto.attemptId())
+                .orElseThrow(AttemptNotFoundException::new);
+
+        UUID ownerId = userFeignClient.getIdByEmail(ownerEmail);
+        Trip trip = attempt.getTrip();
+
+        if (trip.getMaxPassengerCapacity() == trip.getUserIds().size())
+            throw new MaxPassengerCapacityReachedException();
+
+        UUID tripOwnerId = trip.getUserIds()
+                .entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+
+        if (!ownerId.equals(tripOwnerId))
+            throw new AccessDeniedException(ACCESS_DENIED_TRIP_EXCEPTION_MASSAGE);
+
+        if (dto.decision().name().equals(JoinTripStatus.APPROVED.name())) {
+            trip.getUserIds()
+                    .put(dto.usesId(), false);
+
+            attempt.setStatus(JoinTripStatus.APPROVED);
+        } else {
+            attempt.setStatus(JoinTripStatus.REJECTED);
+        }
+
+        tripRepository.save(trip);
+        joinTripRepository.save(attempt);
     }
 }

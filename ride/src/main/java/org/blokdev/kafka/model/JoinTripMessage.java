@@ -6,12 +6,15 @@ import java.util.UUID;
 
 public record JoinTripMessage (
         @JsonProperty("accept_username")
-        String acceptUsername,
+        String attemptUsername,
 
         @JsonProperty("accept_user_id")
-        UUID acceptUserId,
+        UUID attemptUserId,
 
         @JsonProperty("accept_link_id")
-        UUID acceptLinkId
+        UUID attemptId,
+
+        @JsonProperty("owner_email")
+        String ownerEmail
 ) {
 }

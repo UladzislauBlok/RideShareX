@@ -17,6 +17,7 @@ import org.blokdev.model.JoinTripStatus;
 import org.blokdev.model.Trip;
 import org.blokdev.repository.JoinTripRepository;
 import org.blokdev.repository.TripRepository;
+import org.blokdev.util.cache.CacheService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -41,11 +42,13 @@ public class TripServiceImpl implements TripService {
     private final UserFeignClient userFeignClient;
     private final TripMessageProducer messageProducer;
     private final JoinTripRepository joinTripRepository;
+    private final CacheService cacheService;
 
     @Override
     public TripDto createTrip(CreateTripDto dto, String ownerEmail) {
         Trip trip = tripMapper.mapCreateTripDtoToTrip(dto);
-        UUID ownerId = userFeignClient.getIdByEmail(ownerEmail);
+        UUID ownerId = cacheService.getUserIdByEmail(ownerEmail)
+                .orElse(getUserIdAndSaveToCache(ownerEmail));
         Map<UUID, Boolean> userIds = new HashMap<>();
         userIds.put(ownerId, true);
         trip.setUserIds(userIds);
@@ -114,7 +117,8 @@ public class TripServiceImpl implements TripService {
         JoinTripAttempt attempt = joinTripRepository.findById(dto.attemptId())
                 .orElseThrow(AttemptNotFoundException::new);
 
-        UUID ownerId = userFeignClient.getIdByEmail(ownerEmail);
+        UUID ownerId = cacheService.getUserIdByEmail(ownerEmail)
+                .orElse(getUserIdAndSaveToCache(ownerEmail));
         Trip trip = attempt.getTrip();
 
         if (trip.getMaxPassengerCapacity() == trip.getUserIds().size())
@@ -141,5 +145,11 @@ public class TripServiceImpl implements TripService {
 
         tripRepository.save(trip);
         joinTripRepository.save(attempt);
+    }
+
+    private UUID getUserIdAndSaveToCache(String ownerEmail) {
+        UUID id = userFeignClient.getIdByEmail(ownerEmail);
+        cacheService.putUserId(ownerEmail, id);
+        return id;
     }
 }

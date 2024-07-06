@@ -33,3 +33,10 @@ CREATE TABLE IF NOT EXISTS trip_user (
     user_id uuid NOT NULL ,
     is_owner BOOLEAN NOT NULL
 );
+
+--changeset ublok:5
+CREATE TABLE IF NOT EXISTS join_trip_attempt (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    trip_id uuid REFERENCES trip(id) NOT NULL ,
+    status VARCHAR(32) NOT NULL
+)

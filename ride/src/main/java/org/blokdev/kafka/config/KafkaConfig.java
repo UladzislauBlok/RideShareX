@@ -23,11 +23,18 @@ public class KafkaConfig {
     private String bootstrapServers;
 
     @Value("${kafka.producer.trip-topic.name}")
-    private String topicName;
+    private String tripTopicName;
     @Value("${kafka.producer.trip-topic.partitions}")
-    private Integer topicPartitions;
+    private Integer tripTopicPartitions;
     @Value("${kafka.producer.trip-topic.replicas}")
-    private Integer topicReplicas;
+    private Integer tripTopicReplicas;
+
+    @Value("${kafka.producer.rating-topic.name}")
+    private String ratingTopicName;
+    @Value("${kafka.producer.rating-topic.partitions}")
+    private Integer ratingTopicPartitions;
+    @Value("${kafka.producer.rating-topic.replicas}")
+    private Integer ratingTopicReplicas;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
@@ -44,10 +51,18 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic createUserTopic() {
-        return TopicBuilder.name(topicName)
-                .partitions(topicPartitions)
-                .replicas(topicReplicas)
+    public NewTopic createTripTopic() {
+        return TopicBuilder.name(tripTopicName)
+                .partitions(tripTopicPartitions)
+                .replicas(tripTopicReplicas)
+                .build();
+    }
+
+    @Bean
+    public NewTopic createRatingTopic() {
+        return TopicBuilder.name(ratingTopicName)
+                .partitions(ratingTopicPartitions)
+                .replicas(ratingTopicReplicas)
                 .build();
     }
 }

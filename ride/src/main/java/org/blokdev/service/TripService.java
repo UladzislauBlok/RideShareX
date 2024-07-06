@@ -14,6 +14,8 @@ public interface TripService {
                                          LocalDateTime departureTime, int pageNum, int pageSize);
     void deleteTrip(UUID id);
     void requestJoinTrip(UUID tripId, String userEmail);
-    void processJoinTripDecision(JoinTripDecisionDto dto, String ownerEmail);
-
+    void processJoinTripDecision(JoinTripDecisionDto dto, String currentUserEmail);
+    void endTrip(UUID tripId, String currentUserEmail);
+    void startTrip(UUID tripId, String currentUserEmail);
+    void createRating(UUID ratedUserId, Integer ratingValue, String currentUserEmail);
 }

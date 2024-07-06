@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,8 +38,12 @@ public class TripServiceImpl implements TripService {
     private final JoinTripRepository joinTripRepository;
 
     @Override
-    public TripDto createTrip(CreateTripDto dto) {
+    public TripDto createTrip(CreateTripDto dto, String ownerEmail) {
         Trip trip = tripMapper.mapCreateTripDtoToTrip(dto);
+        UUID ownerId = userFeignClient.getIdByEmail(ownerEmail);
+        Map<UUID, Boolean> userIds = new HashMap<>();
+        userIds.put(ownerId, true);
+        trip.setUserIds(userIds);
         trip = tripRepository.save(trip);
         return tripMapper.mapToDtoTrip(trip);
     }

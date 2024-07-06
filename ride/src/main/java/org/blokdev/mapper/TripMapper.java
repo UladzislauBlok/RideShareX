@@ -16,15 +16,9 @@ public interface TripMapper {
     @Mappings({
             @Mapping(target = "id", expression = "java(UUID.randomUUID())"),
             @Mapping(target = "status", expression = "java(TripStatus.PLANNED)"),
-            @Mapping(target = "userIds", expression = "java(mapUserIds(createTripDto))")
+            @Mapping(target = "userIds", ignore = true)
     })
     Trip mapCreateTripDtoToTrip(CreateTripDto createTripDto);
-
-    default Map<UUID, Boolean> mapUserIds(CreateTripDto createTripDto) {
-        Map<UUID, Boolean> userIds = new HashMap<>();
-        userIds.put(createTripDto.ownerId(), true);
-        return userIds;
-    }
 
     TripDto mapToDtoTrip(Trip trip);
 }

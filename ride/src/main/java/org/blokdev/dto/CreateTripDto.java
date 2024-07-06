@@ -29,9 +29,6 @@ public record CreateTripDto (
 
         @Max(8)
         @JsonProperty("max_passenger_capacity")
-        Integer maxPassengerCapacity,
-
-        @JsonProperty("owner_id")
-        UUID ownerId
+        Integer maxPassengerCapacity
 )
 {}

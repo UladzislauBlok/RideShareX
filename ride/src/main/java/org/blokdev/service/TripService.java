@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface TripService {
-    TripDto createTrip(CreateTripDto dto);
+    TripDto createTrip(CreateTripDto dto, String ownerEmail);
     Page<TripDto> getTripsByRouteAndTime(String departureCity,String arrivalCity,
                                          LocalDateTime departureTime, int pageNum, int pageSize);
     void deleteTrip(UUID id);

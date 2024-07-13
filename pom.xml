@@ -14,6 +14,7 @@
       <module>user</module>
       <module>api-gateway</module>
       <module>auth</module>
+      <module>image-microservice</module>
   </modules>
 
   <properties>
@@ -23,6 +24,7 @@
       <spring-cloud.version>2023.0.0</spring-cloud.version>
       <jjwt.version>0.12.5</jjwt.version>
       <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+      <aws.s3.sdk.version>1.12.760</aws.s3.sdk.version>
   </properties>
 
   <parent>

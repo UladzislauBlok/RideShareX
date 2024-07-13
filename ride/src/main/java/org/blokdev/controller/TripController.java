@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -50,34 +51,34 @@ public class TripController {
     }
 
     @PostMapping("/{tripId}/join-requests")
-    public ResponseEntity<Void> requestJoinTrip(@PathVariable UUID tripId, @RequestParam String userEmail) {
-        tripService.requestJoinTrip(tripId, userEmail);
+    public ResponseEntity<Void> requestJoinTrip(@PathVariable UUID tripId, Principal principal) {
+        tripService.requestJoinTrip(tripId, principal.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/join-requests/decision")
-    public ResponseEntity<Void> processJoinTripDecision(@RequestBody JoinTripDecisionDto dto, @RequestParam String currentUserEmail) {
-        tripService.processJoinTripDecision(dto, currentUserEmail);
+    public ResponseEntity<Void> processJoinTripDecision(@RequestBody JoinTripDecisionDto dto, Principal principal) {
+        tripService.processJoinTripDecision(dto, principal.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{tripId}/start")
-    public ResponseEntity<Void> startTrip(@PathVariable UUID tripId, @RequestParam String currentUserEmail) {
-        tripService.startTrip(tripId, currentUserEmail);
+    public ResponseEntity<Void> startTrip(@PathVariable UUID tripId, Principal principal) {
+        tripService.startTrip(tripId, principal.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{tripId}/end")
-    public ResponseEntity<Void> endTrip(@PathVariable UUID tripId, @RequestParam String currentUserEmail) {
-        tripService.endTrip(tripId, currentUserEmail);
+    public ResponseEntity<Void> endTrip(@PathVariable UUID tripId, Principal principal) {
+        tripService.endTrip(tripId, principal.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/ratings")
     public ResponseEntity<Void> createRating(@RequestParam UUID ratedUserId,
                                              @RequestParam Integer ratingValue,
-                                             @RequestParam String currentUserEmail) {
-        tripService.createRating(ratedUserId, ratingValue, currentUserEmail);
+                                             Principal principal) {
+        tripService.createRating(ratedUserId, ratingValue, principal.getName());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

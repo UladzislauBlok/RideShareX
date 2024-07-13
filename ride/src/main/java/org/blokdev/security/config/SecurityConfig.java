@@ -6,6 +6,7 @@ import org.blokdev.security.configurer.HeaderAuthenticationConfigurer;
 import org.blokdev.security.response.ErrorResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,7 +39,17 @@ public class SecurityConfig {
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeHttpRequest ->
                         authorizeHttpRequest
-                                .anyRequest().authenticated()) // todo
+                                .requestMatchers("/api/v1/ride/cities").permitAll()
+                                .requestMatchers("/api/v1/ride/countries").permitAll()
+                                .requestMatchers(HttpMethod.DELETE,"/api/v1/ride/{id}").hasRole("MANAGER")
+                                .requestMatchers("/api/v1/ride/{tripId}/join-requests").hasRole("USER")
+                                .requestMatchers("/api/v1/ride/join-requests/decision").hasRole("USER")
+                                .requestMatchers("/api/v1/ride/{tripId}/start").hasRole("USER")
+                                .requestMatchers("/api/v1/ride/{tripId}/end").hasRole("USER")
+                                .requestMatchers("/api/v1/ride/{tripId}/end").hasRole("USER")
+                                .requestMatchers("/api/v1/ride/ratings").hasRole("USER")
+                                .requestMatchers("/api/v1/ride").hasRole("USER")
+                                .anyRequest().authenticated())
                 .exceptionHandling((ex) -> ex.accessDeniedHandler(accessDeniedHandler))
                 .exceptionHandling((ex) -> ex.authenticationEntryPoint(entryPoint))
                 .build();

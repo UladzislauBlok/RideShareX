@@ -1,26 +1,5 @@
 services:
 
-  postgres-ride:
-    image: postgres:latest
-    container_name: postgres-ride
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_RIDE_MICROSERVICE} -d ride_db" ]
-      interval: 10s
-      timeout: 8s
-      retries: 5
-    environment:
-      POSTGRES_USER: ${DB_USERNAME_RIDE_MICROSERVICE}
-      POSTGRES_PASSWORD: ${DB_PASSWORD_RIDE_MICROSERVICE}
-      POSTGRES_DB: ride_db
-      PGDATA: /data/postgres
-    ports:
-      - '5431:5432'
-    volumes:
-      - C:\postgres-container-data\ride:/data/postgres
-    networks:
-      - ridesharex-net
-    restart: unless-stopped
-
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -52,6 +31,27 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
+  postgres-ride:
+    image: postgres:latest
+    container_name: postgres-ride
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_RIDE_MICROSERVICE} -d ride_db" ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${DB_USERNAME_RIDE_MICROSERVICE}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_RIDE_MICROSERVICE}
+      POSTGRES_DB: ride_db
+      PGDATA: /data/postgres
+    ports:
+      - '5431:5432'
+    volumes:
+      - C:\postgres-container-data\ride:/data/postgres
     networks:
       - ridesharex-net
     restart: unless-stopped
@@ -98,9 +98,23 @@ services:
       - ridesharex-net
     restart: unless-stopped
 
-  cache-redis:
+  redis-user:
     image: redis:latest
-    container_name: cache-redis
+    container_name: redis-user
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - '6379:6379'
+    networks:
+      - ridesharex-net
+    restart: unless-stopped
+
+  redis-ride:
+    image: redis:latest
+    container_name: redis-ride
     healthcheck:
       test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
       interval: 1s

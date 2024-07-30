@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         CreateUserMessage message = userMapper.mapCreateRequestToCreateUserMessage(dto, photoPath, user.getId());
 
         userMessageProducer.sendCreateUserMessage(message);
-        // publish message for imageMicro and UserMicro
+        //todo publish message for imageMicro and UserMicro
     }
 
     @Override

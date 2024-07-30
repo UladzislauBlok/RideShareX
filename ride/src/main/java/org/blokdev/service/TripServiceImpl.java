@@ -16,7 +16,7 @@ import org.blokdev.kafka.producer.RatingMessageProducer;
 import org.blokdev.kafka.producer.TripMessageProducer;
 import org.blokdev.mapper.TripMapper;
 import org.blokdev.model.JoinTripAttempt;
-import org.blokdev.model.JoinTripRequestData;
+import org.blokdev.dto.JoinTripRequestDataDto;
 import org.blokdev.model.JoinTripStatus;
 import org.blokdev.model.Trip;
 import org.blokdev.model.TripStatus;
@@ -101,7 +101,7 @@ public class TripServiceImpl implements TripService {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
 
-        JoinTripRequestData data = userFeignClient.getDataForJoinTripRequest(userEmail, ownerId);
+        JoinTripRequestDataDto data = userFeignClient.getDataForJoinTripRequest(userEmail, ownerId);
 
         if (ownerId.equals(data.userId()))
             throw new SelfJoinNotAllowedException();

@@ -1,7 +1,7 @@
 package org.blokdev.http.client;
 
 import feign.Headers;
-import org.blokdev.model.JoinTripRequestData;
+import org.blokdev.dto.JoinTripRequestDataDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public interface UserFeignClient {
             value = "/api/v1/users/trip",
             consumes = "application/json"
     )
-    JoinTripRequestData getDataForJoinTripRequest(@RequestParam("email") String email, @RequestParam("ownerId") UUID id);
+    JoinTripRequestDataDto getDataForJoinTripRequest(@RequestParam("email") String email, @RequestParam("ownerId") UUID id);
 
     @RequestMapping(
             method = RequestMethod.GET,

@@ -13,7 +13,7 @@ import org.ubdev.kafka.model.UpdateEmailMessage;
 public class KafkaUserMessageProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Value("${kafka.topics.user-topic.name}")
+    @Value("${kafka.producer.user-topic.name}")
     private String topicName;
 
 

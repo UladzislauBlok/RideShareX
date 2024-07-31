@@ -22,11 +22,11 @@ public class KafkaConfig {
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${kafka.topics.user-topic.name}")
+    @Value("${kafka.producer.user-topic.name}")
     private String topicName;
-    @Value("${kafka.topics.user-topic.partitions}")
+    @Value("${kafka.producer.user-topic.partitions}")
     private Integer topicPartitions;
-    @Value("${kafka.topics.user-topic.replicas}")
+    @Value("${kafka.producer.user-topic.replicas}")
     private Integer topicReplicas;
 
     @Bean

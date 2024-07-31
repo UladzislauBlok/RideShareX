@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.ubdev.kafka.model.CreateUserMessage;
 import org.ubdev.kafka.model.DeleteUserMessage;
 import org.ubdev.kafka.model.UpdateEmailMessage;
+import org.ubdev.kafka.model.UploadImageMessage;
+import org.ubdev.kafka.producer.KafkaImageMessageProducer;
 import org.ubdev.kafka.producer.KafkaUserMessageProducer;
 import org.ubdev.user.dto.CreateUserDto;
 import org.ubdev.user.dto.UpdateEmailDto;
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final KafkaUserMessageProducer userMessageProducer;
+    private final KafkaImageMessageProducer imageMessageProducer;
 
     @Override
     public void createUser(CreateUserDto dto, MultipartFile image) {
@@ -43,7 +46,9 @@ public class UserServiceImpl implements UserService {
         CreateUserMessage message = userMapper.mapCreateRequestToCreateUserMessage(dto, photoPath, user.getId());
 
         userMessageProducer.sendCreateUserMessage(message);
-        //todo publish message for imageMicro and UserMicro
+
+        UploadImageMessage uploadImageMessage = userMapper.mapCreateRequestToUploadImageMessage(user.getId(), image);
+        imageMessageProducer.sendImageMessage(uploadImageMessage);
     }
 
     @Override

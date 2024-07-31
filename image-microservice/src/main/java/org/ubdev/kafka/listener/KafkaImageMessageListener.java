@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.ubdev.kafka.model.UploadImageMessage;
-import org.ubdev.kafka.service.AWSService;
+import org.ubdev.service.AWSService;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

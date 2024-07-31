@@ -1,4 +1,4 @@
-package org.ubdev.kafka.exception;
+package org.ubdev.exception;
 
 import lombok.Getter;
 

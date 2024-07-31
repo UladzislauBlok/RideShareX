@@ -48,9 +48,9 @@ public class AWSServiceImpl implements AWSService {
             String objectKey = imageMessage.id().toString();
             s3.putObject(new PutObjectRequest(bucketName, objectKey, imageInputStream, metadata));
         } catch (AmazonS3Exception e) {
-            throw new FileUploadException(e.getMessage(), e.getStatusCode());
+            throw new FileUploadException(e.getMessage(), HttpStatus.valueOf(e.getStatusCode()));
         } catch (IOException e) {
-            throw new FileUploadException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+            throw new FileUploadException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -61,7 +61,7 @@ public class AWSServiceImpl implements AWSService {
         try (S3ObjectInputStream stream = object.getObjectContent()) {
             return stream.readAllBytes();
         } catch (IOException e) {
-            throw new FileDownloadException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+            throw new FileDownloadException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

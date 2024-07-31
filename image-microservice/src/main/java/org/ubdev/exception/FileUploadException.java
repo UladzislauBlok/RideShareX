@@ -1,13 +1,10 @@
 package org.ubdev.exception;
 
-import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-@Getter
-public class FileUploadException extends RuntimeException {
-    private final int httpStatus;
+public class FileUploadException extends BaseFileException {
 
-    public FileUploadException(String message, int httpStatus) {
-        super(message);
-        this.httpStatus = httpStatus;
+    public FileUploadException(String message, HttpStatus statusCode) {
+        super(message, statusCode);
     }
 }

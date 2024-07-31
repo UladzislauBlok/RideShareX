@@ -3,7 +3,6 @@ package org.ubdev.user.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.ubdev.kafka.model.UploadImageMessage;
 import org.ubdev.user.dto.CreateUserDto;

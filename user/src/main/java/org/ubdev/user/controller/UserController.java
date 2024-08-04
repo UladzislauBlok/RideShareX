@@ -6,9 +6,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
-import org.ubdev.user.model.JoinTripRequestData;
+import org.ubdev.user.dto.JoinTripRequestDataDto;
 import org.ubdev.user.service.UserService;
 
 import java.security.Principal;
@@ -40,13 +41,13 @@ public class UserController {
     }
 
     @GetMapping("/trip")
-    public ResponseEntity<JoinTripRequestData> getDataForJoinTripRequest(
+    public ResponseEntity<JoinTripRequestDataDto> getDataForJoinTripRequest(
             @RequestParam("email") String email,
             @RequestParam("ownerId") UUID ownerId,
             @RequestHeader HttpHeaders headers) {
         if (!headers.containsKey(SYSTEM_MESSAGE_HEADER))
             throw new AccessDeniedException(SYSTEM_HEADER_ERROR_MESSAGE);
-        JoinTripRequestData data = userService.getJoinTripRequestData(email, ownerId);
+        JoinTripRequestDataDto data = userService.getJoinTripRequestData(email, ownerId);
 
         return ResponseEntity.ok(data);
     }
@@ -62,5 +63,11 @@ public class UserController {
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody UserUpdateDto dto, Principal principal) {
         return ResponseEntity.ok(userService.update(dto, principal.getName()));
+    }
+
+    @PutMapping("/image")
+    public ResponseEntity<?> updateUserImage(@RequestParam MultipartFile file, Principal principal) {
+        userService.updatePhoto(file, principal.getName());
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,10 +1,10 @@
-package org.blokdev.model;
+package org.blokdev.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
 
-public record JoinTripRequestData (
+public record JoinTripRequestDataDto(
         @JsonProperty("user_id")
         UUID userId,
         String name,

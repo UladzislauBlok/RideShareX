@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.ubdev.kafka.model.user.CreateUserMessage;
 import org.ubdev.kafka.model.user.DeleteUserMessage;
 import org.ubdev.kafka.model.user.UpdateEmailMessage;
+import org.ubdev.kafka.model.user.UploadImageMessage;
+import org.ubdev.kafka.producer.KafkaImageMessageProducer;
 import org.ubdev.user.dto.UserDto;
 import org.ubdev.user.dto.UserUpdateDto;
 import org.ubdev.user.exception.exceptions.UserNotFoundException;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final UserCacheService cacheService;
+    private final KafkaImageMessageProducer imageMessageProducer;
 
     @Transactional(readOnly = true)
     @Override
@@ -84,7 +87,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePhoto(MultipartFile file, String email) {
         UUID id = userRepository.findIdByEmail(email);
-        // todo update image
+        UploadImageMessage message = userMapper.mapCreateRequestToUploadImageMessage(id, file);
+        imageMessageProducer.sendImageMessage(message);
     }
 
     @Override

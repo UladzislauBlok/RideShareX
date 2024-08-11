@@ -15,6 +15,7 @@
       <module>api-gateway</module>
       <module>auth</module>
       <module>image-microservice</module>
+      <module>email</module>
   </modules>
 
   <properties>

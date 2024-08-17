@@ -4,4 +4,4 @@ spring:
   cloud:
     config:
       uri: ${CONFIGURATION_SERVER_URI}
-      name: email
+      name: image

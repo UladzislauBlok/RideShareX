@@ -12,7 +12,7 @@ import org.mapstruct.Mappings;
 public interface TripMapper {
     @Mappings({
             @Mapping(target = "id", expression = "java(UUID.randomUUID())"),
-            @Mapping(target = "status", expression = "java(TripStatus.PLANNED)"),
+            @Mapping(target = "status", expression = "java(org.blokdev.model.TripStatus.PLANNED)"),
             @Mapping(target = "userIds", ignore = true)
     })
     Trip mapCreateTripDtoToTrip(CreateTripDto createTripDto);

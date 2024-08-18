@@ -42,16 +42,16 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_RIDE_MICROSERVICE} -d ride_db" ]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     environment:
       POSTGRES_USER: ${DB_USERNAME_RIDE_MICROSERVICE}
       POSTGRES_PASSWORD: ${DB_PASSWORD_RIDE_MICROSERVICE}
       POSTGRES_DB: ride_db
       PGDATA: /data/postgres
     ports:
-      - '5431:5432'
+      - '5433:5432'
     volumes:
-      - C:\postgres-container-data\ride:/data/postgres
+      - C:\rade-share-x-data\ride:/data/postgres
     networks:
       - ridesharex-net
     restart: unless-stopped
@@ -63,7 +63,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_AUTH_USERNAME} -d auth_db" ]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     environment:
       POSTGRES_USER: ${DB_AUTH_USERNAME}
       POSTGRES_PASSWORD: ${DB_AUTH_PASSWORD}
@@ -84,7 +84,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME_USER_MICROSERVICE} -d user_db" ]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     environment:
       POSTGRES_USER: ${DB_USERNAME_USER_MICROSERVICE}
       POSTGRES_PASSWORD: ${DB_PASSWORD_USER_MICROSERVICE}
@@ -93,7 +93,7 @@ services:
     ports:
       - '5430:5432'
     volumes:
-      - C:\postgres-container-data\user:/data/postgres
+      - C:\rade-share-x-data\user:/data/postgres
     networks:
       - ridesharex-net
     restart: unless-stopped
@@ -121,7 +121,7 @@ services:
       timeout: 3s
       retries: 5
     ports:
-      - '6379:6379'
+      - '6380:6379'
     networks:
       - ridesharex-net
     restart: unless-stopped
@@ -134,7 +134,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     ports:
       - "8888:8080"
     environment:
@@ -154,7 +154,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     ports:
       - "8761:8761"
     depends_on:
@@ -175,7 +175,7 @@ services:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     ports:
       - "8885:8080"
     depends_on:
@@ -191,6 +191,9 @@ services:
       DB_USERNAME_RIDE_MICROSERVICE: ${DB_USERNAME_RIDE_MICROSERVICE}
       DB_PASSWORD_RIDE_MICROSERVICE: ${DB_PASSWORD_RIDE_MICROSERVICE}
       SQL_URI: jdbc:postgresql://postgres-ride:5432/ride_db
+      KAFKA_URI: kafka:9092
+      REDIS_URI: redis-ride
+      REDIS_PORT: 6379
     restart: on-failure:5
     networks:
       - ridesharex-net
@@ -204,7 +207,7 @@ services:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     ports:
       - "8080:8080"
     depends_on:
@@ -232,7 +235,7 @@ services:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     ports:
       - "8081:8080"
     depends_on:
@@ -268,7 +271,7 @@ services:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 8s
-      retries: 5
+      retries: 10
     ports:
       - "8886:8080"
     depends_on:
@@ -282,7 +285,7 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
-      cache-redis:
+      redis-user:
         condition: service_healthy
     environment:
       CONFIGURATION_SERVER_URI: http://configuration-server:8080/
@@ -291,8 +294,73 @@ services:
       DB_PASSWORD_USER_MICROSERVICE: ${DB_PASSWORD_USER_MICROSERVICE}
       SQL_URI: jdbc:postgresql://postgres-user:5432/user_db
       KAFKA_URI: kafka:9092
-      REDIS_URI: cache-redis
+      REDIS_URI: redis-user
       REDIS_PORT: 6379
+    restart: on-failure:5
+    networks:
+      - ridesharex-net
+    mem_limit: 256m
+
+  image:
+    build: image-microservice
+    image: image:1.0.0
+    container_name: image
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 8s
+      retries: 10
+    ports:
+      - "8884:8080"
+    depends_on:
+      configuration-server:
+        condition: service_healthy
+      netflix-eureka:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      CONFIGURATION_SERVER_URI: http://configuration-server:8080/
+      EUREKA_URI: http://netflix-eureka:8761/eureka
+      KAFKA_URI: kafka:9092
+      ACCESS_KEY: ${ACCESS_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      BUCKET_NAME: ${BUCKET_NAME}
+    restart: on-failure:5
+    networks:
+      - ridesharex-net
+    mem_limit: 256m
+
+  email:
+    build: email
+    image: email:1.0.0
+    container_name: email
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 8s
+      retries: 10
+    ports:
+      - "8883:8080"
+    depends_on:
+      configuration-server:
+        condition: service_healthy
+      netflix-eureka:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      CONFIGURATION_SERVER_URI: http://configuration-server:8080/
+      EUREKA_URI: http://netflix-eureka:8761/eureka
+      KAFKA_URI: kafka:9092
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USERNAME: ${EMAIL_USERNAME}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
     restart: on-failure:5
     networks:
       - ridesharex-net

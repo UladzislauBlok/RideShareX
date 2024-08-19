@@ -3,25 +3,25 @@
 --changeset ublok:1
 CREATE TABLE IF NOT EXISTS country
 (
-    code CHAR(2) PRIMARY KEY ,
+    code VARCHAR(2) PRIMARY KEY ,
     name VARCHAR(64) UNIQUE NOT NULL
 );
 
 --changeset ublok:2
 CREATE TABLE IF NOT EXISTS city (
-    code CHAR(3) PRIMARY KEY ,
+    code VARCHAR(3) PRIMARY KEY ,
     name VARCHAR(64) UNIQUE NOT NULL ,
-    country CHAR(2) REFERENCES country(code) NOT NULL
+    country VARCHAR(2) REFERENCES country(code) NOT NULL
 );
 
 --changeset ublok:3
 CREATE TABLE IF NOT EXISTS trip (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    departure_city_code CHAR(3) REFERENCES city(code) NOT NULL ,
-    arrival_city_code CHAR(3) REFERENCES city(code) NOT NULL ,
+    departure_city_code VARCHAR(3) REFERENCES city(code) NOT NULL ,
+    arrival_city_code VARCHAR(3) REFERENCES city(code) NOT NULL ,
     departure_time TIMESTAMP NOT NULL ,
     arrival_time TIMESTAMP NOT NULL ,
-    fare DECIMAL(10,2) NOT NULL ,
+    fare FLOAT NOT NULL ,
     status VARCHAR(32) NOT NULL ,
     max_passenger_capacity INT NOT NULL
 );

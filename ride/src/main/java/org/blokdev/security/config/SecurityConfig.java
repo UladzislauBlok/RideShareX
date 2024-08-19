@@ -39,6 +39,7 @@ public class SecurityConfig {
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeHttpRequest ->
                         authorizeHttpRequest
+                                .requestMatchers("/actuator/health").permitAll()
                                 .requestMatchers("/api/v1/ride/cities").permitAll()
                                 .requestMatchers("/api/v1/ride/countries").permitAll()
                                 .requestMatchers(HttpMethod.DELETE,"/api/v1/ride/{id}").hasRole("MANAGER")

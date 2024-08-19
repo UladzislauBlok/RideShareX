@@ -29,8 +29,10 @@ public class Trip {
     @Id
     private UUID id;
 
+    @Column(name = "departure_city_code", length = 3, unique = true, nullable = false)
     private String departureCity;
 
+    @Column(name = "arrival_city_code", length = 3, unique = true, nullable = false)
     private String arrivalCity;
 
     @Column(name = "departure_time", nullable = false)
@@ -42,7 +44,7 @@ public class Trip {
     @Column(name = "fare", nullable = false)
     private Double fare;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", length = 32, nullable = false)
     @Enumerated(EnumType.STRING)
     private TripStatus status;
 

@@ -14,10 +14,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class City {
     @Id
+    @Column(length = 3)
     private String code;
 
-    @Column(unique = true, nullable = false)
+    @Column(length = 64, unique = true, nullable = false)
     private String name;
 
+    @Column(length = 2, unique = true, nullable = false)
     private String country;
 }

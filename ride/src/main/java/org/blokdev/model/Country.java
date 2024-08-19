@@ -18,8 +18,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Country {
     @Id
+    @Column(length = 2)
     private String code;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, length = 64, nullable = false)
     private String name;
 }

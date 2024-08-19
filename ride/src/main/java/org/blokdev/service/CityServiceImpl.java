@@ -14,7 +14,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public List<CityDto> getCitiesByCountry(String countryCode) {
-        return cityRepository.findByCountry_Code(countryCode)
+        return cityRepository.findByCountry(countryCode)
                 .stream()
                 .map(city -> new CityDto(city.getCode(), city.getName()))
                 .toList();

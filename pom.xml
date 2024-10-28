@@ -26,6 +26,7 @@
       <jjwt.version>0.12.5</jjwt.version>
       <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
       <aws.s3.sdk.version>1.12.760</aws.s3.sdk.version>
+      <org.assertj.version>3.26.3</org.assertj.version>
   </properties>
 
   <parent>
